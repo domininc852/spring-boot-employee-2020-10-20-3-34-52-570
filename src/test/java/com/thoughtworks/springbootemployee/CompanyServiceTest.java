@@ -33,7 +33,7 @@ public class CompanyServiceTest {
         assertEquals(companies, actualCompanies);
     }
     @Test
-    public void should_return_created_employee_when_create_employee_given_a_employee() {
+    public void should_return_created_company_when_create_company_given_a_company() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -51,7 +51,7 @@ public class CompanyServiceTest {
         assertEquals(company, actual);
     }
     @Test
-    public void should_return_updated_employee_when_update_employee_given_a_employee_employeeID() {
+    public void should_return_updated_company_when_update_company_given_a_company_companyID() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -64,5 +64,19 @@ public class CompanyServiceTest {
         Company actual = companyService.update(1, company);
         //then
         assertEquals(company, actual);
+    }
+    @Test
+    public void should_delete_company_when_delete_company_given_companyID() {
+        //given
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+        List<Employee> employees =new ArrayList<>();
+        employees.add(new Employee(1, "test", 18, "Male", 10000));
+        Company company = new Company("ABC",1,employees,1);
+
+        //when
+        companyService.delete(1);
+        //then
+        Mockito.verify(companyRepository,times(1)).delete(1);
     }
 }

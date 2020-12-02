@@ -63,7 +63,7 @@ public class EmployeeServiceTest {
         assertEquals(employee, actual);
     }
     @Test
-    public void should_delete_employee_when_delete_employee_given_a_employee_employeeID() {
+    public void should_delete_employee_when_delete_employee_given_a_employeeID() {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);

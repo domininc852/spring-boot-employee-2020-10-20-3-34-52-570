@@ -50,11 +50,7 @@ public class CompanyController {
 
     @PutMapping("/{companyID}")
     public Company updateCompany(@PathVariable int companyID, @RequestBody Company companyUpdate) {
-        companies.stream().filter(company -> companyID == company.getId()).findFirst().ifPresent(company -> {
-            companies.remove(company);
-            companies.add(companyUpdate);
-        });
-        return companyUpdate;
+        return companyService.update(companyID, companyUpdate);
     }
 
     @DeleteMapping("/{companyID}")

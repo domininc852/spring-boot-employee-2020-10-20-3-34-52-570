@@ -25,6 +25,9 @@ public class CompanyService {
     }
 
     public Company update(int companyID, Company companyUpdate) {
-        return null;
+        return companyRepository.update(companyID, companyUpdate);
+    }
+
+    public void delete(int companyID) {
     }
 }
