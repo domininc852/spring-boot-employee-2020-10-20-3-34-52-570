@@ -3,13 +3,13 @@ package com.thoughtworks.springbootemployee;
 import java.util.List;
 
 public class Company {
-    private String companyName;
+    private String name;
     private int employeesNumber;
     private List<Employee> employees;
-    private int companyID;
+    private int id;
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setEmployeesNumber(int employeesNumber) {
@@ -20,12 +20,12 @@ public class Company {
         this.employees = employees;
     }
 
-    public void setCompanyID(int companyID) {
-        this.companyID = companyID;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getName() {
+        return name;
     }
 
     public int getEmployeesNumber() {
@@ -36,7 +36,7 @@ public class Company {
         return employees;
     }
 
-    public int getCompanyID() {
-        return companyID;
+    public int getId() {
+        return id;
     }
 }

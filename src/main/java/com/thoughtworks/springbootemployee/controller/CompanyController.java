@@ -17,6 +17,13 @@ public class CompanyController {
         return companies;
     }
 
+    @GetMapping("/{companyID}")
+    public Company getCompanyWithID(@PathVariable int companyID){
+        return companies.stream().filter(company -> company.getId()==companyID).findFirst().orElse(null);
+
+    }
+
+
     @PostMapping
     @ResponseStatus(value= HttpStatus.CREATED)
     public Company addCompany(@RequestBody Company company){
@@ -25,7 +32,7 @@ public class CompanyController {
     }
     @PutMapping("/{companyID}")
     public Company updateCompany(@PathVariable int companyID, @RequestBody Company companyUpdate){
-        companies.stream().filter(company -> companyID==company.getCompanyID()).findFirst().ifPresent(company -> {
+        companies.stream().filter(company -> companyID==company.getId()).findFirst().ifPresent(company -> {
             companies.remove(company);
             companies.add(companyUpdate);
         });
@@ -33,6 +40,6 @@ public class CompanyController {
     }
     @DeleteMapping("/{companyID}")
     public void deleteCompany(@PathVariable int companyID){
-        companies.stream().filter(company -> companyID==company.getCompanyID()).findFirst().ifPresent(company -> companies.remove(company));
+        companies.stream().filter(company -> companyID==company.getId()).findFirst().ifPresent(company -> companies.remove(company));
     }
 }
