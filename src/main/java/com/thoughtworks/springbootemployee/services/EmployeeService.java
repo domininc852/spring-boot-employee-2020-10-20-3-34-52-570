@@ -27,6 +27,7 @@ public class EmployeeService {
         return employeeRepository.update(employeeID,employeeUpdate);
     }
 
-    public void delete(int i) {
+    public void delete(int employeeID) {
+        employeeRepository.delete(employeeID);
     }
 }

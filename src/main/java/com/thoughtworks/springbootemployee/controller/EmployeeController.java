@@ -52,7 +52,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{employeeID}")
     public void deleteEmployee(@PathVariable int employeeID) {
-        employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> employees.remove(employee));
+        employeeService.delete(employeeID);
     }
 
 }
