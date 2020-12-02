@@ -31,4 +31,8 @@ public class CompanyController {
         });
         return companyUpdate;
     }
+    @DeleteMapping("/{companyID}")
+    public void deleteCompany(@PathVariable int companyID){
+        companies.stream().filter(company -> companyID==company.getCompanyID()).findFirst().ifPresent(company -> companies.remove(company));
+    }
 }
