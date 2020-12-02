@@ -45,8 +45,7 @@ public class CompanyController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public Company addCompany(@RequestBody Company company) {
-        companies.add(company);
-        return company;
+        return companyService.create(company);
     }
 
     @PutMapping("/{companyID}")
