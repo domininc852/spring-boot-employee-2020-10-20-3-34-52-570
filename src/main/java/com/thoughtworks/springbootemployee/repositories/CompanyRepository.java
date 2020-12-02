@@ -12,4 +12,8 @@ public class CompanyRepository {
     public List<Company> getAll() {
         return companies;
     }
+
+    public Company create(Company company) {
+        return null;
+    }
 }
