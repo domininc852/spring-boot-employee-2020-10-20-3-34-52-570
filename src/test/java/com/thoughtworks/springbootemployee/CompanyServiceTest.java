@@ -108,4 +108,28 @@ public class CompanyServiceTest {
         //then
         assertEquals(employees,actual);
     }
+    @Test
+    public void should_return_companies_when_get_companies_given_specific_page_and_page_size() {
+        //given
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+        List<Employee> employees1 =new ArrayList<>();
+        employees1.add(new Employee(1, "test1", 18, "Male", 10000));
+        Company company1 = new Company("ABC",1,employees1,1);
+        List<Employee> employees2 =new ArrayList<>();
+        employees2.add(new Employee(2, "test2", 18, "Male", 10000));
+        Company company2 = new Company("EFG",1,employees2,2);
+        List<Employee> employees3 =new ArrayList<>();
+        employees3.add(new Employee(3, "test3", 18, "Male", 10000));
+        Company company3 = new Company("HIJ",1,employees3,3);
+
+        List<Company> companies = new ArrayList<>();
+        companies.add(company3);
+        when(companyRepository.getCompaniesWithPageAndPageSize(2,2)).thenReturn(companies);
+        //when
+        List<Employee> actual = companyService.getCompaniesWithPageAndPageSize(2,2);
+        //then
+        assertEquals(companies,actual);
+
+    }
 }

@@ -39,4 +39,8 @@ public class CompanyRepository {
     public List<Employee> getEmployeesWithCompanyID(int companyID) {
         return Objects.requireNonNull(companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null)).getEmployees();
     }
+
+    public List<Company> getCompaniesWithPageAndPageSize(int page, int pageSize) {
+        return null;
+    }
 }

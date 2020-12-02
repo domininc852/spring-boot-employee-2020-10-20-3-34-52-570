@@ -40,4 +40,8 @@ public class CompanyService {
     public List<Employee> getEmployeesWithCompanyID(int companyID) {
         return companyRepository.getEmployeesWithCompanyID(companyID);
     }
+
+    public List<Employee> getCompaniesWithPageAndPageSize(int page, int pageSize) {
+        return null;
+    }
 }
