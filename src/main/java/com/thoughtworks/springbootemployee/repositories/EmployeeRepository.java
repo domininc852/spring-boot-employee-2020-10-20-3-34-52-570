@@ -31,6 +31,6 @@ public class EmployeeRepository {
         employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> employees.remove(employee));
     }
     public Employee getEmployeeWithID(int employeeID) {
-        return null;
+        return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElse(null);
     }
 }
