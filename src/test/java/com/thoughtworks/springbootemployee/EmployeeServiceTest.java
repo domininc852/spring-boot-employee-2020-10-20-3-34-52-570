@@ -53,7 +53,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_updated_employee_when_update_employee_given_a_employee() {
+    public void should_return_updated_employee_when_update_employee_given_a_employee_employeeID() {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -61,11 +61,8 @@ public class EmployeeServiceTest {
         Mockito.when(employeeRepository.update(1, employee)).thenReturn(employee);
 
         //when
-        employeeService.update(1, employee);
-        final ArgumentCaptor<Employee> employeeArgumentCaptor = ArgumentCaptor.forClass(Employee.class);
-        Mockito.verify(employeeRepository, times(1)).update(1, employeeArgumentCaptor.capture());
+        Employee actual = employeeService.update(1, employee);
         //then
-        final Employee actual = employeeArgumentCaptor.getValue();
         assertEquals(employee, actual);
     }
 
