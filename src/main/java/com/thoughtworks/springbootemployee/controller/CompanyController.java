@@ -1,11 +1,13 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.Company;
+import com.thoughtworks.springbootemployee.Employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/companies")
@@ -22,6 +24,12 @@ public class CompanyController {
         return companies.stream().filter(company -> company.getId()==companyID).findFirst().orElse(null);
 
     }
+    @GetMapping("/{companyID}/employees")
+    public List<Employee> getEmployeesWithCompanyID(@PathVariable int companyID){
+        return Objects.requireNonNull(companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null)).getEmployees();
+
+    }
+
 
 
     @PostMapping
