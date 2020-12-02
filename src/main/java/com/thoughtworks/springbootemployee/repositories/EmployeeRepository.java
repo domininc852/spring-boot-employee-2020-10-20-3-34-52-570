@@ -1,10 +1,13 @@
 package com.thoughtworks.springbootemployee.repositories;
 
 import com.thoughtworks.springbootemployee.Employee;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -21,20 +24,32 @@ public class EmployeeRepository {
     }
 
     public Employee update(int employeeID, Employee employeeUpdate) {
-        employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> {
-            employees.remove(employee);
-            employees.add(employeeUpdate);
-        });
-        return employeeUpdate;
+        Optional<Employee> employeeToUpdate = employees.stream().filter(employee -> employee.getId() == employeeID).findFirst();
+        if (employeeToUpdate.isPresent()) {
+            employees.remove(employeeToUpdate.get());
+            return employeeUpdate;
+        }
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "employeeID not found"
+        );
 
     }
 
     public void delete(int employeeID) {
-        employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> employees.remove(employee));
+        Optional<Employee> employeeToDelete = employees.stream().filter(employee -> employee.getId() == employeeID).findFirst();
+        if (employeeToDelete.isPresent()) {
+            employees.remove(employeeToDelete.get());
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "employeeID not found"
+            );
+        }
     }
 
     public Employee getEmployeeWithID(int employeeID) {
-        return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElse(null);
+        return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "employeeID not found"
+        ));
     }
 
     public List<Employee> getEmployeesWithGender(String gender) {
