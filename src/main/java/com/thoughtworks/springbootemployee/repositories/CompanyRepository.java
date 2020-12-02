@@ -17,4 +17,8 @@ public class CompanyRepository {
         companies.add(company);
         return company;
     }
+
+    public Company update(int companyID, Company companyUpdate) {
+        return null;
+    }
 }

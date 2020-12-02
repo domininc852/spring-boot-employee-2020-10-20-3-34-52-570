@@ -50,4 +50,19 @@ public class CompanyServiceTest {
         final Company actual = companyArgumentCaptor.getValue();
         assertEquals(company, actual);
     }
+    @Test
+    public void should_return_updated_employee_when_update_employee_given_a_employee_employeeID() {
+        //given
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+        List<Employee> employees =new ArrayList<>();
+        employees.add(new Employee(1, "test", 18, "Male", 10000));
+        Company company = new Company("ABC",1,employees,1);
+        Mockito.when(companyRepository.update(1,company)).thenReturn(company);
+
+        //when
+        Company actual = companyService.update(1, company);
+        //then
+        assertEquals(company, actual);
+    }
 }
