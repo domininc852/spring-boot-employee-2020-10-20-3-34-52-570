@@ -2,16 +2,20 @@ package com.thoughtworks.springbootemployee.repositories;
 
 import com.thoughtworks.springbootemployee.Company;
 import com.thoughtworks.springbootemployee.Employee;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
 public class CompanyRepository {
     private List<Company> companies = new ArrayList<>();
+
     public List<Company> getAll() {
         return companies;
     }
@@ -22,23 +26,33 @@ public class CompanyRepository {
     }
 
     public Company update(int companyID, Company companyUpdate) {
-        companies.stream().filter(company -> companyID == company.getId()).findFirst().ifPresent(company -> {
-            companies.remove(company);
+        Optional<Company> companyToUpdate = companies.stream().filter(company -> companyID == company.getId()).findFirst();
+        if (companyToUpdate.isPresent()) {
+            companies.remove(companyToUpdate.get());
             companies.add(companyUpdate);
-        });
-        return companyUpdate;
+            return companyUpdate;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "companyID not found");
     }
 
     public void delete(int companyID) {
-        companies.stream().filter(company -> companyID == company.getId()).findFirst().ifPresent(company -> companies.remove(company));
+        Optional<Company> companyToDelete = companies.stream().filter(company -> companyID == company.getId()).findFirst();
+        if (companyToDelete.isPresent()) {
+            companies.remove(companyToDelete.get());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "companyID not found");
+        }
     }
 
     public Company getCompanyWithID(int companyID) {
-        return companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null);
+        return companies.stream().
+                filter(company -> company.getId() == companyID).
+                findFirst().
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "companyID not found"));
     }
 
     public List<Employee> getEmployeesWithCompanyID(int companyID) {
-        return Objects.requireNonNull(companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null)).getEmployees();
+        return Objects.requireNonNull(companies.stream().filter(company -> company.getId() == companyID).findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "companyID not found")).getEmployees());
     }
 
     public List<Company> getCompaniesWithPageAndPageSize(int page, int pageSize) {

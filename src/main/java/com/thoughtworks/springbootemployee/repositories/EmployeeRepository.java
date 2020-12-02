@@ -29,9 +29,7 @@ public class EmployeeRepository {
             employees.remove(employeeToUpdate.get());
             return employeeUpdate;
         }
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "employeeID not found"
-        );
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employeeID not found");
 
     }
 
@@ -40,16 +38,14 @@ public class EmployeeRepository {
         if (employeeToDelete.isPresent()) {
             employees.remove(employeeToDelete.get());
         } else {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "employeeID not found"
-            );
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employeeID not found");
         }
     }
 
     public Employee getEmployeeWithID(int employeeID) {
-        return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "employeeID not found"
-        ));
+        return employees.stream().
+                filter(employee -> employee.getId() == employeeID).findFirst().
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "employeeID not found"));
     }
 
     public List<Employee> getEmployeesWithGender(String gender) {
