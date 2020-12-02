@@ -27,10 +27,12 @@ public class EmployeeController {
     public List<Employee> filterEmployeesWithGender(@RequestParam(name = "gender", required = false) String gender) {
         return employees.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
     }
-    @GetMapping (params = {"page", "pageSize"})
-    public List<Employee> filterEmployeesWithPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page,@RequestParam(name = "pageSize", required = false) int pageSize) {
-        return employees.stream().skip((page-1)*pageSize).limit(pageSize).collect(Collectors.toList());
+
+    @GetMapping(params = {"page", "pageSize"})
+    public List<Employee> filterEmployeesWithPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
+        return employees.stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
     }
+
     @PostMapping
     public Employee addEmployee(@RequestBody Employee employee) {
         employees.add(employee);
