@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employees")
@@ -22,4 +23,16 @@ public class EmployeeController {
         employees.add(employee);
         return employee;
     }
+
+    @PutMapping("/{employeeID}")
+    public Employee updateEmployee(@PathVariable int employeeID, @RequestBody Employee employeeUpdate) {
+        Optional<Employee> employeeToUpdate = employees.stream().filter(employee -> employee.getId() == employeeID).findFirst();
+        if (employeeToUpdate.isPresent()) {
+            employees.remove(employeeToUpdate.get());
+            employees.add(employeeUpdate);
+        }
+
+        return employeeUpdate;
+    }
+
 }
