@@ -38,4 +38,8 @@ public class EmployeeService {
     public List<Employee> getEmployeesWithGender(String gender) {
         return employeeRepository.getEmployeesWithGender(gender);
     }
+
+    public List<Employee> getEmployeesWithPageAndPageSize(int page, int pageSize) {
+        return null;
+    }
 }

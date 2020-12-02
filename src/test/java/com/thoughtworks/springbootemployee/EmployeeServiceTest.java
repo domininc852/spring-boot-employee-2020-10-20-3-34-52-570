@@ -104,6 +104,23 @@ public class EmployeeServiceTest {
         assertEquals(employees,actual);
 
     }
+    @Test
+    public void should_return_employees_when_get_employee_given_specific_page_and_page_size() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        Employee employee1 = new Employee(1, "test1", 18, "Male", 10000);
+        Employee employee2 = new Employee(2, "test2", 18, "Male", 10000);
+        Employee employee3 = new Employee(3, "test2", 18, "Female", 10000);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee3);
+        when(employeeRepository.getEmployeesWithPageAndPageSize(2,2)).thenReturn(employees);
+        //when
+        List<Employee> actual = employeeService.getEmployeesWithPageAndPageSize(2,2);
+        //then
+        assertEquals(employees,actual);
+
+    }
 
 
 

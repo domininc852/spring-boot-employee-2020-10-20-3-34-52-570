@@ -38,4 +38,8 @@ public class EmployeeRepository {
     public List<Employee> getEmployeesWithGender(String gender) {
         return employees.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
     }
+
+    public List<Employee> getEmployeesWithPageAndPageSize(int page, int pageSize) {
+        return null;
+    }
 }
