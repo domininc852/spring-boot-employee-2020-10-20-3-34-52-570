@@ -12,6 +12,6 @@ public class EmployeeRepository {
     }
 
     public Employee create(Employee employee) {
-        return null;
+        return employee;
     }
 }
