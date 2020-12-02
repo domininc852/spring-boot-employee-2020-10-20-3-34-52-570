@@ -30,4 +30,8 @@ public class EmployeeService {
     public void delete(int employeeID) {
         employeeRepository.delete(employeeID);
     }
+
+    public Employee getEmployeeWithID(int employeeID) {
+        return employeeRepository.getEmployeeWithID(employeeID);
+    }
 }

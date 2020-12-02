@@ -77,6 +77,21 @@ public class EmployeeServiceTest {
         //then
         Mockito.verify(employeeRepository,times(1)).delete(1);
     }
+    @Test
+    public void should_return_employee_when_get_employee_with_id_given_employeeID() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        Employee employee1 = new Employee(1, "test1", 18, "Male", 10000);
+        Employee employee2 = new Employee(2, "test2", 18, "Male", 10000);
+        employeeRepository.create(employee1);
+        employeeRepository.create(employee2);
+        //when
+        Employee actual = employeeService.getEmployeeWithID(1);
+        //then
+        assertEquals(employee1,actual);
+    }
+
 
 
 
