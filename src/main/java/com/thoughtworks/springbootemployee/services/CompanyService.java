@@ -34,6 +34,6 @@ public class CompanyService {
     }
 
     public Company getCompanyWithID(int companyID) {
-        return null;
+        return companyRepository.getCompanyWithID(companyID);
     }
 }

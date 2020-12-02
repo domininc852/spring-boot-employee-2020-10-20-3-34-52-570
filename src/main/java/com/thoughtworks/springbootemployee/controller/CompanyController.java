@@ -26,7 +26,7 @@ public class CompanyController {
 
     @GetMapping("/{companyID}")
     public Company getCompanyWithID(@PathVariable int companyID) {
-        return companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null);
+        return companyService.getCompanyWithID(companyID);
 
     }
 
