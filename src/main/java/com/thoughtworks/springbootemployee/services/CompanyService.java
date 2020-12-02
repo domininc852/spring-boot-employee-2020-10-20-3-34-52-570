@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.services;
 
 import com.thoughtworks.springbootemployee.Company;
+import com.thoughtworks.springbootemployee.Employee;
 import com.thoughtworks.springbootemployee.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,9 @@ public class CompanyService {
 
     public void delete(int companyID) {
         companyRepository.delete(companyID);
+    }
+
+    public Company getCompanyWithID(int companyID) {
+        return null;
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 public class CompanyServiceTest {
     @Test
@@ -78,5 +79,19 @@ public class CompanyServiceTest {
         companyService.delete(1);
         //then
         Mockito.verify(companyRepository,times(1)).delete(1);
+    }
+    @Test
+    public void should_return_company_when_get_company_with_id_given_companyID() {
+        //given
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+        List<Employee> employees =new ArrayList<>();
+        employees.add(new Employee(1, "test", 18, "Male", 10000));
+        Company company = new Company("ABC",1,employees,1);
+        when(companyRepository.getCompanyWithID(1)).thenReturn(company);
+        //when
+        Company actual = companyService.getCompanyWithID(1);
+        //then
+        assertEquals(company,actual);
     }
 }
