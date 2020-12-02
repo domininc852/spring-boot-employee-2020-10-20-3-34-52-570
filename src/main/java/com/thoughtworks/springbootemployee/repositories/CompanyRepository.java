@@ -1,10 +1,12 @@
 package com.thoughtworks.springbootemployee.repositories;
 
 import com.thoughtworks.springbootemployee.Company;
+import com.thoughtworks.springbootemployee.Employee;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class CompanyRepository {
@@ -32,5 +34,9 @@ public class CompanyRepository {
 
     public Company getCompanyWithID(int companyID) {
         return companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null);
+    }
+
+    public List<Employee> getEmployeesWithCompanyID(int companyID) {
+        return Objects.requireNonNull(companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null)).getEmployees();
     }
 }

@@ -37,7 +37,7 @@ public class CompanyController {
 
     @GetMapping("/{companyID}/employees")
     public List<Employee> getEmployeesWithCompanyID(@PathVariable int companyID) {
-        return Objects.requireNonNull(companies.stream().filter(company -> company.getId() == companyID).findFirst().orElse(null)).getEmployees();
+        return companyService.getEmployeesWithCompanyID(companyID);
 
     }
 

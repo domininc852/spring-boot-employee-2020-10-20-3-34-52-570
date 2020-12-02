@@ -36,4 +36,8 @@ public class CompanyService {
     public Company getCompanyWithID(int companyID) {
         return companyRepository.getCompanyWithID(companyID);
     }
+
+    public List<Employee> getEmployeesWithCompanyID(int companyID) {
+        return companyRepository.getEmployeesWithCompanyID(companyID);
+    }
 }
