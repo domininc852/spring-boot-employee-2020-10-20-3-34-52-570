@@ -22,7 +22,7 @@ public class EmployeeServiceTest {
     @Test
     public void should_employee_service_return_all_employees_when_get_all_given_employees() {
         //given
-        EmployeeRepository employeeRepository =Mockito.mock(EmployeeRepository.class);
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> employeeList = new ArrayList<>();
         employeeList.add(new Employee(1, "test", 18, "Male", 10000));
@@ -34,21 +34,40 @@ public class EmployeeServiceTest {
         //then
         assertEquals(employeeList, actualEmployees);
     }
+
     @Test
     public void should_return_created_employee_when_create_employee_given_a_employee() {
         //given
-        EmployeeRepository employeeRepository =Mockito.mock(EmployeeRepository.class);
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee employee = new Employee(1, "test", 18, "Male", 10000);
         Mockito.when(employeeRepository.create(employee)).thenReturn(employee);
 
         //when
         employeeService.create(employee);
-        final ArgumentCaptor<Employee> employeeArgumentCaptor=ArgumentCaptor.forClass(Employee.class);
-        Mockito.verify(employeeRepository,times(1)).create(employeeArgumentCaptor.capture());
+        final ArgumentCaptor<Employee> employeeArgumentCaptor = ArgumentCaptor.forClass(Employee.class);
+        Mockito.verify(employeeRepository, times(1)).create(employeeArgumentCaptor.capture());
         //then
-        final Employee actual= employeeArgumentCaptor.getValue();
+        final Employee actual = employeeArgumentCaptor.getValue();
         assertEquals(employee, actual);
     }
+
+    @Test
+    public void should_return_updated_employee_when_update_employee_given_a_employee() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        Employee employee = new Employee(1, "test", 18, "Male", 10000);
+        Mockito.when(employeeRepository.update(1, employee)).thenReturn(employee);
+
+        //when
+        employeeService.update(1, employee);
+        final ArgumentCaptor<Employee> employeeArgumentCaptor = ArgumentCaptor.forClass(Employee.class);
+        Mockito.verify(employeeRepository, times(1)).update(1, employeeArgumentCaptor.capture());
+        //then
+        final Employee actual = employeeArgumentCaptor.getValue();
+        assertEquals(employee, actual);
+    }
+
 
 }

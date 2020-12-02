@@ -14,4 +14,8 @@ public class EmployeeRepository {
     public Employee create(Employee employee) {
         return employee;
     }
+
+    public Employee update(int id, Employee employee) {
+        return employee;
+    }
 }
