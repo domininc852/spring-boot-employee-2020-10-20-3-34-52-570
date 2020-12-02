@@ -19,12 +19,13 @@ public class EmployeeService {
     public List<Employee> getAll() {
         return employeeRepository.getAll();
     }
-    public Employee create(Employee employee){
+
+    public Employee create(Employee employee) {
         return employeeRepository.create(employee);
     }
 
     public Employee update(int employeeID, Employee employeeUpdate) {
-        return employeeRepository.update(employeeID,employeeUpdate);
+        return employeeRepository.update(employeeID, employeeUpdate);
     }
 
     public void delete(int employeeID) {
@@ -40,6 +41,6 @@ public class EmployeeService {
     }
 
     public List<Employee> getEmployeesWithPageAndPageSize(int page, int pageSize) {
-        return null;
+        return employeeRepository.getEmployeesWithPageAndPageSize(page, pageSize);
     }
 }

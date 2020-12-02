@@ -8,6 +8,13 @@ public class Company {
     private List<Employee> employees;
     private int id;
 
+    public Company(String name, int employeesNumber, List<Employee> employees, int id) {
+        this.name = name;
+        this.employeesNumber = employeesNumber;
+        this.employees = employees;
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

@@ -35,19 +35,18 @@ public class EmployeeController {
 
     @GetMapping(params = {"page", "pageSize"})
     public List<Employee> filterEmployeesWithPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
-        return employees.stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
+        return employeeService.getEmployeesWithPageAndPageSize(page, pageSize);
     }
 
     @PostMapping
-    @ResponseStatus(value= HttpStatus.CREATED)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public Employee addEmployee(@RequestBody Employee employee) {
-        employeeService.create(employee);
-        return employee;
+        return employeeService.create(employee);
     }
 
     @PutMapping("/{employeeID}")
     public Employee updateEmployee(@PathVariable int employeeID, @RequestBody Employee employeeUpdate) {
-       return employeeService.update(employeeID,employeeUpdate);
+        return employeeService.update(employeeID, employeeUpdate);
     }
 
     @DeleteMapping("/{employeeID}")
