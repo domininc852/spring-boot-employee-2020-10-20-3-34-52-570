@@ -29,5 +29,6 @@ public class CompanyService {
     }
 
     public void delete(int companyID) {
+        companyRepository.delete(companyID);
     }
 }
