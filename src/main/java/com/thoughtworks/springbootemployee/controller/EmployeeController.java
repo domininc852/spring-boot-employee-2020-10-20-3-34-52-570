@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
@@ -19,8 +19,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeID}")
-    public Employee getEmployeeWithID(@PathVariable int employeeID){
+    public Employee getEmployeeWithID(@PathVariable int employeeID) {
         return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElse(null);
+    }
+
+    @GetMapping(params = "gender")
+    public List<Employee> filterEmployeesWithGender(@RequestParam(name = "gender", required = false) String gender) {
+        return employees.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
     }
 
     @PostMapping
@@ -37,8 +42,9 @@ public class EmployeeController {
         });
         return employeeUpdate;
     }
+
     @DeleteMapping("/{employeeID}")
-    public void deleteEmployee(@PathVariable int employeeID){
+    public void deleteEmployee(@PathVariable int employeeID) {
         employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> employees.remove(employee));
     }
 
