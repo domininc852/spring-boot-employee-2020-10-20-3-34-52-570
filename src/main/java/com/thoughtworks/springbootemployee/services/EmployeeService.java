@@ -12,6 +12,10 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
     public List<Employee> getAll() {
         return null;
     }

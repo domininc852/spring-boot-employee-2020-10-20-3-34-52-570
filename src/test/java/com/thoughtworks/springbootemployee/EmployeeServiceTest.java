@@ -15,10 +15,10 @@ public class EmployeeServiceTest {
     @Test
     public void should_employee_service_return_all_employees_when_get_all_given_employees() {
         //given
-        EmployeeService employeeService = new EmployeeService();
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> employeeList = new ArrayList<>();
-        employeeList.add(new Employee());
+        employeeList.add(new Employee(1,"test",18,"Male",10000));
         Mockito.when(employeeRepository.getAll()).thenReturn(employeeList);
 
         //when
