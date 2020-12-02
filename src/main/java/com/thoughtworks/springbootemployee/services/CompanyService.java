@@ -41,7 +41,7 @@ public class CompanyService {
         return companyRepository.getEmployeesWithCompanyID(companyID);
     }
 
-    public List<Employee> getCompaniesWithPageAndPageSize(int page, int pageSize) {
-        return null;
+    public List<Company> getCompaniesWithPageAndPageSize(int page, int pageSize) {
+        return companyRepository.getCompaniesWithPageAndPageSize(page, pageSize);
     }
 }

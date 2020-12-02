@@ -32,7 +32,7 @@ public class CompanyController {
 
     @GetMapping(params = {"page", "pageSize"})
     public List<Company> filterCompaniesWithPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
-        return companies.stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
+        return companyService.getCompaniesWithPageAndPageSize(page, pageSize);
     }
 
     @GetMapping("/{companyID}/employees")
