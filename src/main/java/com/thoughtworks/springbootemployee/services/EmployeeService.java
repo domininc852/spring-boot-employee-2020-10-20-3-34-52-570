@@ -34,4 +34,8 @@ public class EmployeeService {
     public Employee getEmployeeWithID(int employeeID) {
         return employeeRepository.getEmployeeWithID(employeeID);
     }
+
+    public List<Employee> getEmployees(String male) {
+        return null;
+    }
 }

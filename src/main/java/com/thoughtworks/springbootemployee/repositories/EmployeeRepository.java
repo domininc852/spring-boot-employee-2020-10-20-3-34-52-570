@@ -33,4 +33,8 @@ public class EmployeeRepository {
     public Employee getEmployeeWithID(int employeeID) {
         return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElse(null);
     }
+
+    public List<Employee> getEmployees(String male) {
+        return null;
+    }
 }

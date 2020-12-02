@@ -16,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 public class EmployeeServiceTest {
 
@@ -83,13 +84,29 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee employee1 = new Employee(1, "test1", 18, "Male", 10000);
-        Employee employee2 = new Employee(2, "test2", 18, "Male", 10000);
-        employeeService.create(employee1);
-        employeeService.create(employee2);
+        when(employeeRepository.getEmployeeWithID(1)).thenReturn(employee1);
         //when
-        employeeService.getEmployeeWithID(1);
+        Employee actual = employeeService.getEmployeeWithID(1);
         //then
-        Mockito.verify(employeeRepository,times(1)).getEmployeeWithID(1);
+        assertEquals(employee1,actual);
+    }
+    @Test
+    public void should_return_employees_with_specific_gender_when_get_employee_given_specific_gender() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        Employee employee1 = new Employee(1, "test1", 18, "Male", 10000);
+        Employee employee2 = new Employee(2, "test2", 18, "Male", 10000);
+        Employee employee3 = new Employee(3, "test2", 18, "Female", 10000);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee1);
+        employees.add(employee2);
+        when(employeeRepository.getEmployees("Male")).thenReturn(employees);
+        //when
+        List<Employee> actual = employeeService.getEmployees("Male");
+        //then
+        assertEquals(employees,actual);
+
     }
 
 
