@@ -3,12 +3,8 @@ package com.thoughtworks.springbootemployee;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import com.thoughtworks.springbootemployee.services.EmployeeService;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,9 +97,9 @@ public class EmployeeServiceTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(employee1);
         employees.add(employee2);
-        when(employeeRepository.getEmployees("Male")).thenReturn(employees);
+        when(employeeRepository.getEmployeesWithGender("Male")).thenReturn(employees);
         //when
-        List<Employee> actual = employeeService.getEmployees("Male");
+        List<Employee> actual = employeeService.getEmployeesWithGender("Male");
         //then
         assertEquals(employees,actual);
 
