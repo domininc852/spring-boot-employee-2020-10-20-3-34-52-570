@@ -10,12 +10,17 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    List<Employee> employees = new ArrayList<>();
+    private List<Employee> employees = new ArrayList<>();
 
 
     @GetMapping
     public List<Employee> getAllEmployees() {
         return this.employees;
+    }
+
+    @GetMapping("/{employeeID}")
+    public Employee getEmployeeWithID(@PathVariable int employeeID){
+        return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElse(null);
     }
 
     @PostMapping
@@ -26,18 +31,15 @@ public class EmployeeController {
 
     @PutMapping("/{employeeID}")
     public Employee updateEmployee(@PathVariable int employeeID, @RequestBody Employee employeeUpdate) {
-        Optional<Employee> employeeToUpdate = employees.stream().filter(employee -> employee.getId() == employeeID).findFirst();
-        if (employeeToUpdate.isPresent()) {
-            employees.remove(employeeToUpdate.get());
+        employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> {
+            employees.remove(employee);
             employees.add(employeeUpdate);
-        }
-
+        });
         return employeeUpdate;
     }
     @DeleteMapping("/{employeeID}")
     public void deleteEmployee(@PathVariable int employeeID){
-        Optional<Employee> employeeToUpdate = employees.stream().filter(employee -> employee.getId() == employeeID).findFirst();
-        employeeToUpdate.ifPresent(employee -> employees.remove(employee));
+        employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> employees.remove(employee));
     }
 
 }
