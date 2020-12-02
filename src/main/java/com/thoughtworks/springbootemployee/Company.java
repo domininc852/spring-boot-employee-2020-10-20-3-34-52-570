@@ -15,6 +15,10 @@ public class Company {
         this.id = id;
     }
 
+    public Company() {
+
+    }
+
     public void setName(String name) {
         this.name = name;
     }

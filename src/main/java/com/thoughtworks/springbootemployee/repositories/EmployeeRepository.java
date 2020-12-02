@@ -10,8 +10,9 @@ import java.util.stream.Collectors;
 @Repository
 public class EmployeeRepository {
     private List<Employee> employees = new ArrayList<>();
+
     public List<Employee> getAll() {
-        return null;
+        return employees;
     }
 
     public Employee create(Employee employee) {
@@ -31,6 +32,7 @@ public class EmployeeRepository {
     public void delete(int employeeID) {
         employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().ifPresent(employee -> employees.remove(employee));
     }
+
     public Employee getEmployeeWithID(int employeeID) {
         return employees.stream().filter(employee -> employee.getId() == employeeID).findFirst().orElse(null);
     }
