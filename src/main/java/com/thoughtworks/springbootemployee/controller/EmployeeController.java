@@ -32,8 +32,8 @@ public class EmployeeController {
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Employee> getEmployeesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
-        return employeeService.getEmployeesByPageAndPageSize(page, pageSize);
+    public List<Employee> getEmployeesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
+        return employeeService.getEmployeesByPageAndPageSize(page, pageSize).getContent();
     }
 
     @PostMapping

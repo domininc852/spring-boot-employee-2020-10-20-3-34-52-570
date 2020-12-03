@@ -28,8 +28,8 @@ public class CompanyController {
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Company> getCompaniesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
-        return companyService.getCompaniesByPageAndPageSize(page, pageSize);
+    public List<Company> getCompaniesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
+        return companyService.getCompaniesByPageAndPageSize(page, pageSize).getContent();
     }
 
     @GetMapping("/{companyID}/employees")

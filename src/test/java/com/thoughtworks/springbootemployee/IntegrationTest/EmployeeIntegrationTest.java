@@ -28,15 +28,11 @@ public class EmployeeIntegrationTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @AfterEach
-    void tearDown() {
-        employeeRepository.deleteAll();
-    }
-
     @Test
     public void should_return_all_employees_when_get_all_given_employees() throws Exception {
 
         //given
+        employeeRepository.deleteAll();
         Employee employee = new Employee("bar", 20, "Female", 120);
         employeeRepository.save(employee);
         //when
@@ -53,6 +49,7 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_employee_when_create_given_employee() throws Exception {
         //given
+        employeeRepository.deleteAll();
         String employeeAsJson = "{\n" +
                 "        \"name\": \"foobar\",\n" +
                 "        \"age\": 3,\n" +
@@ -77,10 +74,11 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_updated_employee_when_update_employee_given_an_employee() throws Exception {
         //given
+        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         String employeeToString = " {\n" +
                 "            \"name\": \"bar\",\n" +
-                "            \"age\": 20,\n" +
+                "            \"age\": 30,\n" +
                 "            \"gender\": \"Female\",\n" +
                 "            \"salary\": 120\n" +
                 "    }";
@@ -91,13 +89,15 @@ public class EmployeeIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(employee.getId()))
                 .andExpect(jsonPath("$.name").value("bar"))
-                .andExpect(jsonPath("$.age").value(20))
+                .andExpect(jsonPath("$.age").value(30))
                 .andExpect(jsonPath("$.salary").value(120))
                 .andExpect(jsonPath("$.gender").value("Female"));
     }
+
     @Test
     public void should_return_404_error_when_update_employee_given_an_invalid_employeeID() throws Exception {
         //given
+        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         String employeeToString = " {\n" +
                 "            \"name\": \"bar\",\n" +
@@ -116,6 +116,7 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_delete_a_employee_when_delete_employee_given_an_employeeID() throws Exception {
         //given
+        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
 
         //when
@@ -125,25 +126,29 @@ public class EmployeeIntegrationTest {
                 .andExpect(status().isOk());
         assertTrue(employeeRepository.findById(employee.getId()).isEmpty());
     }
+
     @Test
     public void should_return_404_error__when_delete_employee_given_an_invalid_employeeID() throws Exception {
         //given
+        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        ObjectId fakeID= new ObjectId();
+        ObjectId fakeID = new ObjectId();
         //when
 
         //then
-        mockMvc.perform(delete("/employees/"+fakeID))
+        mockMvc.perform(delete("/employees/" + fakeID))
                 .andExpect(status().isNotFound());
     }
+
     @Test
     public void should_return_employee_when_get_employee_by_id_given_an_employeeID() throws Exception {
         //given
+        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         //when
 
         //then
-        mockMvc.perform(get("/employees/"+employee.getId()))
+        mockMvc.perform(get("/employees/" + employee.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(employee.getId()))
                 .andExpect(jsonPath("$.name").value("bar"))
@@ -151,16 +156,63 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.gender").value("Female"))
                 .andExpect(jsonPath("$.salary").value(120));
     }
+
     @Test
     public void should_return_404_error_when_get_employee_by_id_given_an_invalid_employeeID() throws Exception {
         //given
+        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         ObjectId fakeID = new ObjectId();
         //when
 
         //then
-        mockMvc.perform(get("/employees/"+fakeID))
+        mockMvc.perform(get("/employees/" + fakeID))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_return_employees_with_same_gender_when_get_employee_by_gender_given_gender() throws Exception {
+        //given
+        employeeRepository.deleteAll();
+        employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        Employee employee = employeeRepository.save(new Employee("dominic", 30, "Male", 10));
+        //when
+
+        //then
+        mockMvc.perform(get("/employees").param("gender", "Male"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(employee.getId()))
+                .andExpect(jsonPath("$[0].name").value("dominic"))
+                .andExpect(jsonPath("$[0].age").value(30))
+                .andExpect(jsonPath("$[0].gender").value("Male"))
+                .andExpect(jsonPath("$[0].salary").value(10));
+
+    }
+
+    @Test
+    public void should_return_paged_employees_when_get_employee_by_page_and_page_size_given_page_and_page_size() throws Exception {
+        //given
+        employeeRepository.deleteAll();
+        employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        employeeRepository.save(new Employee("dominic", 30, "Male", 10));
+        Employee employee1 = employeeRepository.save(new Employee("jeany", 18, "Female", 1200000));
+        Employee employee2 = employeeRepository.save(new Employee("Woody", 18, "Male", 120000));
+        //when
+
+        //then
+        mockMvc.perform(get("/employees").param("page", "1").param("pageSize", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(employee1.getId()))
+                .andExpect(jsonPath("$[0].name").value("jeany"))
+                .andExpect(jsonPath("$[0].age").value(18))
+                .andExpect(jsonPath("$[0].gender").value("Female"))
+                .andExpect(jsonPath("$[0].salary").value(1200000))
+                .andExpect(jsonPath("$[1].id").value(employee2.getId()))
+                .andExpect(jsonPath("$[1].name").value("Woody"))
+                .andExpect(jsonPath("$[1].age").value(18))
+                .andExpect(jsonPath("$[1].gender").value("Male"))
+                .andExpect(jsonPath("$[1].salary").value(120000));
+
     }
 
 }
