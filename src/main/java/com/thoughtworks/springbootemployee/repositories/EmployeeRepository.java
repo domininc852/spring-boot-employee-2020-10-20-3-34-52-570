@@ -54,6 +54,6 @@ public class EmployeeRepository {
     }
 
     public List<Employee> getEmployeesByPageAndPageSize(int page, int pageSize) {
-        return employees.stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
+        return employees.stream().skip(page * pageSize).limit(pageSize).collect(Collectors.toList());
     }
 }
