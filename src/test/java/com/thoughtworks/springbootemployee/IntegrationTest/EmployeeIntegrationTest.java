@@ -3,8 +3,9 @@ package com.thoughtworks.springbootemployee.IntegrationTest;
 import com.thoughtworks.springbootemployee.Employee;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.bson.types.ObjectId;
-import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,16 +24,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class EmployeeIntegrationTest {
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @AfterEach
+     void tearDown(){
+        employeeRepository.deleteAll();
+    }
     @Test
     public void should_return_all_employees_when_get_all_given_employees() throws Exception {
 
         //given
-        employeeRepository.deleteAll();
         Employee employee = new Employee("bar", 20, "Female", 120);
         employeeRepository.save(employee);
         //when
@@ -49,7 +53,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_employee_when_create_given_employee() throws Exception {
         //given
-        employeeRepository.deleteAll();
         String employeeAsJson = "{\n" +
                 "        \"name\": \"foobar\",\n" +
                 "        \"age\": 3,\n" +
@@ -74,7 +77,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_updated_employee_when_update_employee_given_an_employee() throws Exception {
         //given
-        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         String employeeToString = " {\n" +
                 "            \"name\": \"bar\",\n" +
@@ -85,7 +87,9 @@ public class EmployeeIntegrationTest {
         //when
 
         //then
-        mockMvc.perform(put("/employees/" + employee.getId()).contentType(MediaType.APPLICATION_JSON).content(employeeToString))
+        mockMvc.perform(put("/employees/" + employee.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(employeeToString))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(employee.getId()))
                 .andExpect(jsonPath("$.name").value("bar"))
@@ -97,7 +101,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_404_error_when_update_employee_given_an_invalid_employeeID() throws Exception {
         //given
-        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         String employeeToString = " {\n" +
                 "            \"name\": \"bar\",\n" +
@@ -116,7 +119,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_delete_a_employee_when_delete_employee_given_an_employeeID() throws Exception {
         //given
-        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
 
         //when
@@ -130,7 +132,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_404_error__when_delete_employee_given_an_invalid_employeeID() throws Exception {
         //given
-        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         ObjectId fakeID = new ObjectId();
         //when
@@ -143,7 +144,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_employee_when_get_employee_by_id_given_an_employeeID() throws Exception {
         //given
-        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         //when
 
@@ -160,7 +160,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_404_error_when_get_employee_by_id_given_an_invalid_employeeID() throws Exception {
         //given
-        employeeRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         ObjectId fakeID = new ObjectId();
         //when
@@ -173,7 +172,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_employees_with_same_gender_when_get_employee_by_gender_given_gender() throws Exception {
         //given
-        employeeRepository.deleteAll();
         employeeRepository.save(new Employee("bar", 20, "Female", 120));
         Employee employee = employeeRepository.save(new Employee("dominic", 30, "Male", 10));
         //when
@@ -192,7 +190,6 @@ public class EmployeeIntegrationTest {
     @Test
     public void should_return_paged_employees_when_get_employee_by_page_and_page_size_given_page_and_page_size() throws Exception {
         //given
-        employeeRepository.deleteAll();
         employeeRepository.save(new Employee("bar", 20, "Female", 120));
         employeeRepository.save(new Employee("dominic", 30, "Male", 10));
         Employee employee1 = employeeRepository.save(new Employee("jeany", 18, "Female", 1200000));

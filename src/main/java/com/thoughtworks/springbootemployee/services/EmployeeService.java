@@ -51,7 +51,8 @@ public class EmployeeService {
     }
 
     public Employee getEmployeeByID(String employeeID) {
-        return employeeRepository.findById(employeeID).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND));
+        return employeeRepository.findById(employeeID)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND));
     }
 
     public List<Employee> getEmployeesByGender(String gender) {

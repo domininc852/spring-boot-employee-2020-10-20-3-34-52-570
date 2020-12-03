@@ -55,11 +55,13 @@ public class CompanyService {
     }
 
     public Company getCompanyByID(String companyID) {
-        return companyRepository.findById(companyID).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND));
+        return companyRepository.findById(companyID)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND));
     }
 
     public List<Employee> getEmployeesByCompanyID(String companyID) {
-        return companyRepository.findById(companyID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND)).getEmployees();
+        return companyRepository.findById(companyID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND)).getEmployees();
     }
 
     public Page<Company> getCompaniesByPageAndPageSize(int page, int pageSize) {
