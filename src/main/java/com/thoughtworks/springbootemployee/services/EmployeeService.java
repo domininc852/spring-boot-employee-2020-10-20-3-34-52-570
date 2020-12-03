@@ -1,23 +1,25 @@
 package com.thoughtworks.springbootemployee.services;
 
 import com.thoughtworks.springbootemployee.Employee;
-import com.thoughtworks.springbootemployee.repositories.EmployeeRepository1;
+import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
     @Autowired
-    private EmployeeRepository1 employeeRepository;
+    private EmployeeRepository employeeRepository;
     private static final String EMPLOYEE_ID_NOT_FOUND = "Employee ID not found";
 
-    public EmployeeService(EmployeeRepository1 employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -30,16 +32,22 @@ public class EmployeeService {
     }
 
     public Employee update(String employeeID, Employee employeeUpdate) {
-        Optional<Employee> employeeToUpdate = getAll().stream().filter(employee -> employee.getId().equals(employeeID) ).findFirst();
+        Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
         if (employeeToUpdate.isPresent()) {
-            employeeRepository.deleteById(employeeID);
+            employeeUpdate.setId(employeeToUpdate.get().getId());
             return employeeRepository.save(employeeUpdate);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND);
     }
 
     public void delete(String employeeID) {
-        employeeRepository.deleteById(employeeID);
+        Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
+        if (employeeToUpdate.isPresent()) {
+            employeeRepository.deleteById(employeeID);
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND);
+        }
     }
 
     public Employee getEmployeeByID(String employeeID) {
@@ -50,7 +58,8 @@ public class EmployeeService {
         return employeeRepository.findAllByGender(gender);
     }
 
-    public List<Employee> getEmployeesByPageAndPageSize(int page, int pageSize) {
-        return getAll().stream().skip(page * pageSize).limit(pageSize).collect(Collectors.toList());
+    public Page<Employee> getEmployeesByPageAndPageSize(int page, int pageSize) {
+        Pageable paging = PageRequest.of(page,pageSize);
+        return employeeRepository.findAll(paging);
     }
 }

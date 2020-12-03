@@ -1,11 +1,12 @@
 package com.thoughtworks.springbootemployee;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document
 public class Employee {
-    @MongoId
+    @MongoId( value = FieldType.OBJECT_ID)
     private String id;
     private String name;
     private int age;
@@ -43,23 +44,23 @@ public class Employee {
         return name;
     }
 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public void setAge(int age) {
-//        this.age = age;
-//    }
-//
-//    public void setGender(String gender) {
-//        this.gender = gender;
-//    }
-//
-//    public void setSalary(int salary) {
-//        this.salary = salary;
-//    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
 }
