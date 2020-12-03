@@ -30,9 +30,10 @@ public class EmployeeIntegrationTest {
     private EmployeeRepository employeeRepository;
 
     @AfterEach
-     void tearDown(){
+    void tearDown() {
         employeeRepository.deleteAll();
     }
+
     @Test
     public void should_return_all_employees_when_get_all_given_employees() throws Exception {
 
@@ -41,8 +42,8 @@ public class EmployeeIntegrationTest {
         employeeRepository.save(employee);
         //when
         //then
-        mockMvc.perform(get("/employees")).
-                andExpect(status().isOk())
+        mockMvc.perform(get("/employees"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("bar"))
                 .andExpect(jsonPath("$[0].age").value(20))
