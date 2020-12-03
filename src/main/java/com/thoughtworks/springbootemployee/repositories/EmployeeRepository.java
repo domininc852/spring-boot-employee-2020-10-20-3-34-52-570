@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class EmployeeRepository {
+    private static final String EMPLOYEE_ID_NOT_FOUND = "Employee ID not found";
     private List<Employee> employees = new ArrayList<>();
 
     public List<Employee> getAll() {
@@ -29,7 +30,7 @@ public class EmployeeRepository {
             employees.remove(employeeToUpdate.get());
             return employeeUpdate;
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employeeID not found");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND);
 
     }
 
@@ -38,14 +39,14 @@ public class EmployeeRepository {
         if (employeeToDelete.isPresent()) {
             employees.remove(employeeToDelete.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employeeID not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND);
         }
     }
 
     public Employee getEmployeeWithID(int employeeID) {
         return employees.stream().
                 filter(employee -> employee.getId() == employeeID).findFirst().
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "employeeID not found"));
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND));
     }
 
     public List<Employee> getEmployeesWithGender(String gender) {
