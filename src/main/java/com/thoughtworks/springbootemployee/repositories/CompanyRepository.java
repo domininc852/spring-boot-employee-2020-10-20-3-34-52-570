@@ -21,7 +21,7 @@ public class CompanyRepository {
         return companies;
     }
 
-    public Company create(Company company) {
+    public Company save(Company company) {
         companies.add(company);
         return company;
     }
@@ -45,21 +45,21 @@ public class CompanyRepository {
         }
     }
 
-    public Company getCompanyWithID(int companyID) {
+    public Company getCompanyByID(int companyID) {
         return companies.stream().
                 filter(company -> company.getId() == companyID).
                 findFirst().
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND));
     }
 
-    public List<Employee> getEmployeesWithCompanyID(int companyID) {
+    public List<Employee> getEmployeesByCompanyID(int companyID) {
         return Objects.requireNonNull(companies.stream().
                 filter(company -> company.getId() == companyID).
                 findFirst().
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND)).getEmployees());
     }
 
-    public List<Company> getCompaniesWithPageAndPageSize(int page, int pageSize) {
+    public List<Company> getCompaniesByPageAndPageSize(int page, int pageSize) {
         return companies.stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
     }
 }

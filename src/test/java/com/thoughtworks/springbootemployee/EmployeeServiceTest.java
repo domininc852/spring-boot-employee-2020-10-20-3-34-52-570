@@ -37,12 +37,12 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee employee = new Employee(1, "test", 18, "Male", 10000);
-        Mockito.when(employeeRepository.create(employee)).thenReturn(employee);
+        Mockito.when(employeeRepository.save(employee)).thenReturn(employee);
 
         //when
-        employeeService.create(employee);
+        employeeService.save(employee);
         final ArgumentCaptor<Employee> employeeArgumentCaptor = ArgumentCaptor.forClass(Employee.class);
-        Mockito.verify(employeeRepository, times(1)).create(employeeArgumentCaptor.capture());
+        Mockito.verify(employeeRepository, times(1)).save(employeeArgumentCaptor.capture());
         //then
         final Employee actual = employeeArgumentCaptor.getValue();
         assertEquals(employee, actual);
@@ -79,9 +79,9 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         Employee employee1 = new Employee(1, "test1", 18, "Male", 10000);
-        when(employeeRepository.getEmployeeWithID(1)).thenReturn(employee1);
+        when(employeeRepository.getEmployeeByID(1)).thenReturn(employee1);
         //when
-        Employee actual = employeeService.getEmployeeWithID(1);
+        Employee actual = employeeService.getEmployeeByID(1);
         //then
         assertEquals(employee1,actual);
     }
@@ -96,9 +96,9 @@ public class EmployeeServiceTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(employee1);
         employees.add(employee2);
-        when(employeeRepository.getEmployeesWithGender("Male")).thenReturn(employees);
+        when(employeeRepository.getEmployeesByGender("Male")).thenReturn(employees);
         //when
-        List<Employee> actual = employeeService.getEmployeesWithGender("Male");
+        List<Employee> actual = employeeService.getEmployeesByGender("Male");
         //then
         assertEquals(employees,actual);
 
@@ -113,9 +113,9 @@ public class EmployeeServiceTest {
         Employee employee3 = new Employee(3, "test2", 18, "Female", 10000);
         List<Employee> employees = new ArrayList<>();
         employees.add(employee3);
-        when(employeeRepository.getEmployeesWithPageAndPageSize(2,2)).thenReturn(employees);
+        when(employeeRepository.getEmployeesByPageAndPageSize(2,2)).thenReturn(employees);
         //when
-        List<Employee> actual = employeeService.getEmployeesWithPageAndPageSize(2,2);
+        List<Employee> actual = employeeService.getEmployeesByPageAndPageSize(2,2);
         //then
         assertEquals(employees,actual);
 

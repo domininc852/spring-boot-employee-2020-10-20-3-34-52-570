@@ -20,8 +20,8 @@ public class EmployeeService {
         return employeeRepository.getAll();
     }
 
-    public Employee create(Employee employee) {
-        return employeeRepository.create(employee);
+    public Employee save(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
     public Employee update(int employeeID, Employee employeeUpdate) {
@@ -32,15 +32,15 @@ public class EmployeeService {
         employeeRepository.delete(employeeID);
     }
 
-    public Employee getEmployeeWithID(int employeeID) {
-        return employeeRepository.getEmployeeWithID(employeeID);
+    public Employee getEmployeeByID(int employeeID) {
+        return employeeRepository.getEmployeeByID(employeeID);
     }
 
-    public List<Employee> getEmployeesWithGender(String gender) {
-        return employeeRepository.getEmployeesWithGender(gender);
+    public List<Employee> getEmployeesByGender(String gender) {
+        return employeeRepository.getEmployeesByGender(gender);
     }
 
-    public List<Employee> getEmployeesWithPageAndPageSize(int page, int pageSize) {
-        return employeeRepository.getEmployeesWithPageAndPageSize(page, pageSize);
+    public List<Employee> getEmployeesByPageAndPageSize(int page, int pageSize) {
+        return employeeRepository.getEmployeesByPageAndPageSize(page, pageSize);
     }
 }

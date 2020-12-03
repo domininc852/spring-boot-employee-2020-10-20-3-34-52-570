@@ -21,8 +21,8 @@ public class CompanyService {
         return companyRepository.getAll();
     }
 
-    public Company create(Company company) {
-        return companyRepository.create(company);
+    public Company save(Company company) {
+        return companyRepository.save(company);
     }
 
     public Company update(int companyID, Company companyUpdate) {
@@ -33,15 +33,15 @@ public class CompanyService {
         companyRepository.delete(companyID);
     }
 
-    public Company getCompanyWithID(int companyID) {
-        return companyRepository.getCompanyWithID(companyID);
+    public Company getCompanyByID(int companyID) {
+        return companyRepository.getCompanyByID(companyID);
     }
 
-    public List<Employee> getEmployeesWithCompanyID(int companyID) {
-        return companyRepository.getEmployeesWithCompanyID(companyID);
+    public List<Employee> getEmployeesByCompanyID(int companyID) {
+        return companyRepository.getEmployeesByCompanyID(companyID);
     }
 
-    public List<Company> getCompaniesWithPageAndPageSize(int page, int pageSize) {
-        return companyRepository.getCompaniesWithPageAndPageSize(page, pageSize);
+    public List<Company> getCompaniesByPageAndPageSize(int page, int pageSize) {
+        return companyRepository.getCompaniesByPageAndPageSize(page, pageSize);
     }
 }

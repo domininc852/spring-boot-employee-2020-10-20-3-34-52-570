@@ -21,24 +21,24 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeID}")
-    public Employee getEmployeeWithID(@PathVariable int employeeID) {
-        return employeeService.getEmployeeWithID(employeeID);
+    public Employee getEmployeeByID(@PathVariable int employeeID) {
+        return employeeService.getEmployeeByID(employeeID);
     }
 
     @GetMapping(params = "gender")
-    public List<Employee> filterEmployeesWithGender(@RequestParam(name = "gender", required = false) String gender) {
-        return employeeService.getEmployeesWithGender(gender);
+    public List<Employee> getEmployeeByGender(@RequestParam(name = "gender", required = false) String gender) {
+        return employeeService.getEmployeesByGender(gender);
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public List<Employee> filterEmployeesWithPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
-        return employeeService.getEmployeesWithPageAndPageSize(page, pageSize);
+    public List<Employee> getEmployeesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
+        return employeeService.getEmployeesByPageAndPageSize(page, pageSize);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Employee addEmployee(@RequestBody Employee employee) {
-        return employeeService.create(employee);
+    public Employee createEmployee(@RequestBody Employee employee) {
+        return employeeService.save(employee);
     }
 
     @PutMapping("/{employeeID}")

@@ -40,12 +40,12 @@ public class CompanyServiceTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "test", 18, "Male", 10000));
         Company company = new Company("ABC", 1, employees, 1);
-        Mockito.when(companyRepository.create(company)).thenReturn(company);
+        Mockito.when(companyRepository.save(company)).thenReturn(company);
 
         //when
-        companyService.create(company);
+        companyService.save(company);
         final ArgumentCaptor<Company> companyArgumentCaptor = ArgumentCaptor.forClass(Company.class);
-        Mockito.verify(companyRepository, times(1)).create(companyArgumentCaptor.capture());
+        Mockito.verify(companyRepository, times(1)).save(companyArgumentCaptor.capture());
         //then
         final Company actual = companyArgumentCaptor.getValue();
         assertEquals(company, actual);
@@ -90,9 +90,9 @@ public class CompanyServiceTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "test", 18, "Male", 10000));
         Company company = new Company("ABC", 1, employees, 1);
-        when(companyRepository.getCompanyWithID(1)).thenReturn(company);
+        when(companyRepository.getCompanyByID(1)).thenReturn(company);
         //when
-        Company actual = companyService.getCompanyWithID(1);
+        Company actual = companyService.getCompanyByID(1);
         //then
         assertEquals(company, actual);
     }
@@ -105,9 +105,9 @@ public class CompanyServiceTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "test", 18, "Male", 10000));
         Company company = new Company("ABC", 1, employees, 1);
-        when(companyRepository.getEmployeesWithCompanyID(1)).thenReturn(employees);
+        when(companyRepository.getEmployeesByCompanyID(1)).thenReturn(employees);
         //when
-        List<Employee> actual = companyService.getEmployeesWithCompanyID(1);
+        List<Employee> actual = companyService.getEmployeesByCompanyID(1);
         //then
         assertEquals(employees, actual);
     }
@@ -129,9 +129,9 @@ public class CompanyServiceTest {
 
         List<Company> companies = new ArrayList<>();
         companies.add(company3);
-        when(companyRepository.getCompaniesWithPageAndPageSize(2, 2)).thenReturn(companies);
+        when(companyRepository.getCompaniesByPageAndPageSize(2, 2)).thenReturn(companies);
         //when
-        List<Company> actual = companyService.getCompaniesWithPageAndPageSize(2, 2);
+        List<Company> actual = companyService.getCompaniesByPageAndPageSize(2, 2);
         //then
         assertEquals(companies, actual);
 

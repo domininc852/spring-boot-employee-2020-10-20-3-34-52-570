@@ -38,23 +38,23 @@ public class Employee {
         return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
+//    public void setId(int id) {
+//        this.id = id;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public void setAge(int age) {
+//        this.age = age;
+//    }
+//
+//    public void setGender(String gender) {
+//        this.gender = gender;
+//    }
+//
+//    public void setSalary(int salary) {
+//        this.salary = salary;
+//    }
 }

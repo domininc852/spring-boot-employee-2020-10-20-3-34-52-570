@@ -19,7 +19,7 @@ public class EmployeeRepository {
         return employees;
     }
 
-    public Employee create(Employee employee) {
+    public Employee save(Employee employee) {
         employees.add(employee);
         return employee;
     }
@@ -43,17 +43,17 @@ public class EmployeeRepository {
         }
     }
 
-    public Employee getEmployeeWithID(int employeeID) {
+    public Employee getEmployeeByID(int employeeID) {
         return employees.stream().
                 filter(employee -> employee.getId() == employeeID).findFirst().
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND));
     }
 
-    public List<Employee> getEmployeesWithGender(String gender) {
+    public List<Employee> getEmployeesByGender(String gender) {
         return employees.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
     }
 
-    public List<Employee> getEmployeesWithPageAndPageSize(int page, int pageSize) {
+    public List<Employee> getEmployeesByPageAndPageSize(int page, int pageSize) {
         return employees.stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
     }
 }

@@ -22,26 +22,26 @@ public class CompanyController {
 
     @GetMapping("/{companyID}")
     public Company getCompanyWithID(@PathVariable int companyID) {
-        return companyService.getCompanyWithID(companyID);
+        return companyService.getCompanyByID(companyID);
 
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public List<Company> filterCompaniesWithPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
-        return companyService.getCompaniesWithPageAndPageSize(page, pageSize);
+    public List<Company> getCompaniesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
+        return companyService.getCompaniesByPageAndPageSize(page, pageSize);
     }
 
     @GetMapping("/{companyID}/employees")
-    public List<Employee> getEmployeesWithCompanyID(@PathVariable int companyID) {
-        return companyService.getEmployeesWithCompanyID(companyID);
+    public List<Employee> getEmployeesByCompanyID(@PathVariable int companyID) {
+        return companyService.getEmployeesByCompanyID(companyID);
 
     }
 
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Company addCompany(@RequestBody Company company) {
-        return companyService.create(company);
+    public Company createCompany(@RequestBody Company company) {
+        return companyService.save(company);
     }
 
     @PutMapping("/{companyID}")
