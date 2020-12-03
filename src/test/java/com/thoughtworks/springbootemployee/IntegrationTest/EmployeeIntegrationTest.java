@@ -136,5 +136,31 @@ public class EmployeeIntegrationTest {
         mockMvc.perform(delete("/employees/"+fakeID))
                 .andExpect(status().isNotFound());
     }
+    @Test
+    public void should_return_employee_when_get_employee_by_id_given_an_employeeID() throws Exception {
+        //given
+        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        //when
+
+        //then
+        mockMvc.perform(get("/employees/"+employee.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(employee.getId()))
+                .andExpect(jsonPath("$.name").value("bar"))
+                .andExpect(jsonPath("$.age").value(20))
+                .andExpect(jsonPath("$.gender").value("Female"))
+                .andExpect(jsonPath("$.salary").value(120));
+    }
+    @Test
+    public void should_return_404_error_when_get_employee_by_id_given_an_invalid_employeeID() throws Exception {
+        //given
+        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        ObjectId fakeID = new ObjectId();
+        //when
+
+        //then
+        mockMvc.perform(get("/employees/"+fakeID))
+                .andExpect(status().isNotFound());
+    }
 
 }
