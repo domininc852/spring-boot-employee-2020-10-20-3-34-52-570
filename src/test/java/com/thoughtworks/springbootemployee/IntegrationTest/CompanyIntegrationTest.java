@@ -5,7 +5,8 @@ import com.thoughtworks.springbootemployee.Employee;
 import com.thoughtworks.springbootemployee.repositories.CompanyRepository;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,18 +28,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CompanyIntegrationTest {
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
     private CompanyRepository companyRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @AfterEach
+    void tearDown() {
+        employeeRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
     @Test
     public void should_return_all_companies_when_get_all_given_companies() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         List<Employee> employees = new ArrayList<>();
         employees.add(employeeRepository.save(new Employee("bar", 20, "Female", 120)));
         Company company = new Company("ABC", 1, employees);
@@ -60,8 +65,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_created_company_when_create_given_company() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         String companyAsJson = "{\n" +
                 "    \"name\": \"ABC\",\n" +
@@ -87,8 +90,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_updated_company_when_update_given_company() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
@@ -119,8 +120,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_update_given_invalid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
@@ -143,8 +142,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_delete_company_when_delete_given_valid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
@@ -160,8 +157,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_delete_given_invalid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
@@ -176,8 +171,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_company_when_get_company_by_id_given_valid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
@@ -200,8 +193,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_get_company_by_id_given_invalid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
@@ -216,8 +207,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_all_employees_when_get_employees_by_id_given_valid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee1 = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         Employee employee2 = employeeRepository.save(new Employee("abcd", 18, "Male", 120));
         List<Employee> employees = new ArrayList<>();
@@ -244,8 +233,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_get_employees_by_id_given_invalid_companyID() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee1 = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         Employee employee2 = employeeRepository.save(new Employee("abcd", 18, "Male", 120));
         List<Employee> employees = new ArrayList<>();
@@ -262,8 +249,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_paged_companies_when_get_companies_by_page_and_page_size_given_page_and_page_size() throws Exception {
         //given
-        employeeRepository.deleteAll();
-        companyRepository.deleteAll();
         Employee employee1 = employeeRepository.save(new Employee("a", 18, "Female", 120));
         Employee employee2 = employeeRepository.save(new Employee("b", 18, "Male", 120));
         Employee employee3 = employeeRepository.save(new Employee("c", 18, "Male", 120));
