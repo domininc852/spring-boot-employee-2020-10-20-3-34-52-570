@@ -1,6 +1,5 @@
 package com.thoughtworks.springbootemployee;
 
-import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import com.thoughtworks.springbootemployee.services.EmployeeService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
