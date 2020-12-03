@@ -4,6 +4,7 @@ import com.thoughtworks.springbootemployee.Company;
 import com.thoughtworks.springbootemployee.Employee;
 import com.thoughtworks.springbootemployee.repositories.CompanyRepository;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,14 +33,15 @@ public class CompanyIntegrationTest {
     private CompanyRepository companyRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+
     @Test
     public void should_return_all_companies_when_get_all_given_companies() throws Exception {
         //given
         employeeRepository.deleteAll();
         companyRepository.deleteAll();
-        List<Employee> employees =new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
         employees.add(employeeRepository.save(new Employee("bar", 20, "Female", 120)));
-        Company company = new Company("ABC", 1,employees);
+        Company company = new Company("ABC", 1, employees);
         companyRepository.save(company);
         //when
         //then
@@ -53,17 +56,18 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].employees[0].gender").value("Female"))
                 .andExpect(jsonPath("$[0].employees[0].salary").value(120));
     }
+
     @Test
     public void should_return_created_company_when_create_given_company() throws Exception {
         //given
         employeeRepository.deleteAll();
         companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        String companyAsJson="{\n" +
+        String companyAsJson = "{\n" +
                 "    \"name\": \"ABC\",\n" +
                 "    \"employeesNumber\": 1,\n" +
                 "    \"employees\": [\n" +
-                "     "+employee.toJSON()+"\n"+
+                "     " + employee.toJSON() + "\n" +
                 "    ]\n" +
                 "}";
         //when
@@ -79,27 +83,28 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.employees[0].gender").value("Female"))
                 .andExpect(jsonPath("$.employees[0].salary").value(120));
     }
+
     @Test
     public void should_return_updated_company_when_update_given_company() throws Exception {
         //given
         employeeRepository.deleteAll();
         companyRepository.deleteAll();
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees =new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
         employees.add(employee);
-        Company company = new Company("ABC", 1,employees);
+        Company company = new Company("ABC", 1, employees);
         companyRepository.save(company);
 
-        String companyAsJson="{\n" +
+        String companyAsJson = "{\n" +
                 "    \"name\": \"ABCD\",\n" +
                 "    \"employeesNumber\": 1,\n" +
                 "    \"employees\": [\n" +
-                "     "+employee.toJSON()+"\n"+
+                "     " + employee.toJSON() + "\n" +
                 "    ]\n" +
                 "}";
         //when
         //then
-        mockMvc.perform(put("/companies/"+company.getId()).contentType(MediaType.APPLICATION_JSON).content(companyAsJson))
+        mockMvc.perform(put("/companies/" + company.getId()).contentType(MediaType.APPLICATION_JSON).content(companyAsJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(company.getId()))
                 .andExpect(jsonPath("$.name").value("ABCD"))
@@ -110,5 +115,62 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.employees[0].gender").value("Female"))
                 .andExpect(jsonPath("$.employees[0].salary").value(120));
     }
+    @Test
+    public void should_return_404_error_when_update_given_invalid_companyID() throws Exception {
+        //given
+        employeeRepository.deleteAll();
+        companyRepository.deleteAll();
+        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
+        companyRepository.save(new Company("ABC", 1, employees));
+        String companyAsJson = "{\n" +
+                "    \"name\": \"ABCD\",\n" +
+                "    \"employeesNumber\": 1,\n" +
+                "    \"employees\": [\n" +
+                "     " + employee.toJSON() + "\n" +
+                "    ]\n" +
+                "}";
+        ObjectId fakeID = new ObjectId();
+        //when
+        //then
+        mockMvc.perform(put("/companies/" + fakeID).contentType(MediaType.APPLICATION_JSON).content(companyAsJson))
+                .andExpect(status().isNotFound());
+
+    }
+    @Test
+    public void should_delete_company_when_delete_given_valid_companyID() throws Exception {
+        //given
+        employeeRepository.deleteAll();
+        companyRepository.deleteAll();
+        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
+        Company company = new Company("ABC", 1, employees);
+        companyRepository.save(company);
+        //when
+        //then
+        mockMvc.perform(delete("/companies/" + company.getId()))
+                .andExpect(status().isOk());
+        assertTrue(companyRepository.findById(company.getId()).isEmpty());
+    }
+    @Test
+    public void should_return_404_error_when_delete_given_invalid_companyID() throws Exception {
+        //given
+        employeeRepository.deleteAll();
+        companyRepository.deleteAll();
+        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
+        companyRepository.save(new Company("ABC", 1, employees));
+        ObjectId fakeID = new ObjectId();
+        //when
+        //then
+        mockMvc.perform(delete("/companies/" +fakeID))
+                .andExpect(status().isNotFound());
+    }
+
+
+
 
 }
