@@ -70,4 +70,14 @@ public class Employee {
     public void setSalary(int salary) {
         this.salary = salary;
     }
+
+    public String toJSON(){
+        return String.format("    {\n" +
+                "        \"id\": \"%s\",\n" +
+                "        \"name\": \"%s\",\n" +
+                "        \"age\": %d,\n" +
+                "        \"gender\": \"%s\",\n" +
+                "        \"salary\": %d\n" +
+                "    }",id,name,age,gender,salary);
+    }
 }

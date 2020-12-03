@@ -22,6 +22,11 @@ public class Company {
         this.employees = employees;
         this.id = id;
     }
+    public Company(String name, int employeesNumber, List<Employee> employees) {
+        this.name = name;
+        this.employeesNumber = employeesNumber;
+        this.employees = employees;
+    }
 
     public Company() {
 
