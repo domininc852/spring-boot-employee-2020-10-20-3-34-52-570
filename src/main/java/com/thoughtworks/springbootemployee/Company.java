@@ -5,27 +5,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
 public class Company {
     private String name;
     private int employeesNumber;
-    @DBRef
-    private List<Employee> employees;
+    private List<String> employeeIDs = new ArrayList<>();
     @MongoId( value = FieldType.OBJECT_ID)
     private String id;
 
-    public Company(String name, int employeesNumber, List<Employee> employees, String id) {
+    public Company(String name,  String id) {
         this.name = name;
-        this.employeesNumber = employeesNumber;
-        this.employees = employees;
         this.id = id;
     }
-    public Company(String name, int employeesNumber, List<Employee> employees) {
+    public Company(String name) {
         this.name = name;
-        this.employeesNumber = employeesNumber;
-        this.employees = employees;
     }
 
     public Company() {
@@ -40,9 +36,6 @@ public class Company {
         this.employeesNumber = employeesNumber;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
 
     public void setId(String id) {
         this.id = id;
@@ -56,11 +49,16 @@ public class Company {
         return employeesNumber;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
 
     public String getId() {
         return id;
+    }
+
+    public void setEmployeeIDs(List<String> employeeIDs) {
+        this.employeeIDs = employeeIDs;
+    }
+
+    public List<String> getEmployeeIDs() {
+        return employeeIDs;
     }
 }
