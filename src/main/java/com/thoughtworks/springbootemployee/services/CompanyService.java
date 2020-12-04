@@ -1,22 +1,19 @@
 package com.thoughtworks.springbootemployee.services;
 
-import com.thoughtworks.springbootemployee.Company;
-import com.thoughtworks.springbootemployee.Employee;
+import com.thoughtworks.springbootemployee.entities.Company;
+import com.thoughtworks.springbootemployee.entities.Employee;
+import com.thoughtworks.springbootemployee.exceptions.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.repositories.CompanyRepository;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class CompanyService {
@@ -39,45 +36,44 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public Company update(String companyID, Company companyUpdate) {
+    public Company update(String companyID, Company companyUpdate) throws CompanyNotFoundException {
         Optional<Company> companyToUpdate = companyRepository.findById(companyID);
         if (companyToUpdate.isPresent()) {
             companyUpdate.setId(companyToUpdate.get().getId());
             companyUpdate.setEmployeesNumber(companyUpdate.getEmployeeIDs().size());
             return companyRepository.save(companyUpdate);
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND);
+        throw new CompanyNotFoundException(COMPANY_ID_NOT_FOUND);
     }
 
-    public void delete(String companyID) {
+    public void delete(String companyID) throws CompanyNotFoundException {
         Optional<Company> companyToDelete = companyRepository.findById(companyID);
         if (companyToDelete.isPresent()) {
             companyRepository.deleteById(companyID);
-        }
-        else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND);
+        } else {
+            throw new CompanyNotFoundException(COMPANY_ID_NOT_FOUND);
         }
 
 
     }
 
-    public Company getCompanyByID(String companyID) {
+    public Company getCompanyByID(String companyID) throws CompanyNotFoundException {
         return companyRepository.findById(companyID)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND));
+                .orElseThrow(() -> new CompanyNotFoundException(COMPANY_ID_NOT_FOUND));
     }
 
-    public List<Employee> getEmployeesByCompanyID(String companyID) {
+    public List<Employee> getEmployeesByCompanyID(String companyID) throws CompanyNotFoundException {
         Optional<Company> company = companyRepository.findById(companyID);
-        if (company.isPresent()){
-            List<Employee> employees=new ArrayList<>();
+        if (company.isPresent()) {
+            List<Employee> employees = new ArrayList<>();
             employeeRepository.findAllById(company.get().getEmployeeIDs()).forEach(employees::add);
             return employees;
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, COMPANY_ID_NOT_FOUND);
+        throw new CompanyNotFoundException(COMPANY_ID_NOT_FOUND);
     }
 
     public Page<Company> getCompaniesByPageAndPageSize(int page, int pageSize) {
-        Pageable paging = PageRequest.of(page,pageSize);
+        Pageable paging = PageRequest.of(page, pageSize);
         return companyRepository.findAll(paging);
     }
 }

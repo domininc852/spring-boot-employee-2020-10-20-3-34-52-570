@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.controller;
 
-import com.thoughtworks.springbootemployee.Employee;
+import com.thoughtworks.springbootemployee.entities.Employee;
+import com.thoughtworks.springbootemployee.exceptions.EmployeeNotFoundException;
 import com.thoughtworks.springbootemployee.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeID}")
-    public Employee getEmployeeByID(@PathVariable String employeeID) {
+    public Employee getEmployeeByID(@PathVariable String employeeID) throws EmployeeNotFoundException {
         return employeeService.getEmployeeByID(employeeID);
     }
 
@@ -42,12 +43,12 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeID}")
-    public Employee updateEmployee(@PathVariable String employeeID, @RequestBody Employee employeeUpdate) {
+    public Employee updateEmployee(@PathVariable String employeeID, @RequestBody Employee employeeUpdate) throws EmployeeNotFoundException {
         return employeeService.update(employeeID, employeeUpdate);
     }
 
     @DeleteMapping("/{employeeID}")
-    public void deleteEmployee(@PathVariable String employeeID) {
+    public void deleteEmployee(@PathVariable String employeeID) throws EmployeeNotFoundException {
         employeeService.delete(employeeID);
     }
 

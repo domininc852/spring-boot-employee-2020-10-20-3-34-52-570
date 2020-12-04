@@ -1,14 +1,13 @@
 package com.thoughtworks.springbootemployee.services;
 
-import com.thoughtworks.springbootemployee.Employee;
+import com.thoughtworks.springbootemployee.entities.Employee;
+import com.thoughtworks.springbootemployee.exceptions.EmployeeNotFoundException;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,28 +30,28 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee update(String employeeID, Employee employeeUpdate) {
+    public Employee update(String employeeID, Employee employeeUpdate) throws EmployeeNotFoundException{
         Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
         if (employeeToUpdate.isPresent()) {
             employeeUpdate.setId(employeeToUpdate.get().getId());
             return employeeRepository.save(employeeUpdate);
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND);
+        throw new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND);
     }
 
-    public void delete(String employeeID) {
+    public void delete(String employeeID) throws EmployeeNotFoundException {
         Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
         if (employeeToUpdate.isPresent()) {
             employeeRepository.deleteById(employeeID);
         }
         else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND);
+            throw new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND);
         }
     }
 
-    public Employee getEmployeeByID(String employeeID) {
+    public Employee getEmployeeByID(String employeeID) throws EmployeeNotFoundException {
         return employeeRepository.findById(employeeID)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, EMPLOYEE_ID_NOT_FOUND));
+                .orElseThrow(()-> new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND));
     }
 
     public List<Employee> getEmployeesByGender(String gender) {

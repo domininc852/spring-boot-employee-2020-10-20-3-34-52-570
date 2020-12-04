@@ -1,7 +1,7 @@
 package com.thoughtworks.springbootemployee.IntegrationTest;
 
-import com.thoughtworks.springbootemployee.Company;
-import com.thoughtworks.springbootemployee.Employee;
+import com.thoughtworks.springbootemployee.entities.Company;
+import com.thoughtworks.springbootemployee.entities.Employee;
 import com.thoughtworks.springbootemployee.repositories.CompanyRepository;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.bson.types.ObjectId;
