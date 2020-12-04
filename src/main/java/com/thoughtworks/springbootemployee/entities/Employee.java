@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document
 public class Employee {
-    @MongoId( value = FieldType.OBJECT_ID)
+    @MongoId(value = FieldType.OBJECT_ID)
     private String id;
     private String name;
     private int age;
@@ -71,13 +71,13 @@ public class Employee {
         this.salary = salary;
     }
 
-    public String toJSON(){
+    public String toJSON() {
         return String.format("    {\n" +
                 "        \"id\": \"%s\",\n" +
                 "        \"name\": \"%s\",\n" +
                 "        \"age\": %d,\n" +
                 "        \"gender\": \"%s\",\n" +
                 "        \"salary\": %d\n" +
-                "    }",id,name,age,gender,salary);
+                "    }", id, name, age, gender, salary);
     }
 }

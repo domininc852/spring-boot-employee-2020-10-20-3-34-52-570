@@ -16,12 +16,14 @@ import java.util.List;
 public class CompanyMapper {
     @Autowired
     private EmployeeRepository employeeRepository;
-    public Company toEntity(CompanyRequest companyRequest){
+
+    public Company toEntity(CompanyRequest companyRequest) {
         Company company = new Company();
         BeanUtils.copyProperties(companyRequest, company);
         return company;
     }
-    public CompanyResponse toResponse(Company company){
+
+    public CompanyResponse toResponse(Company company) {
         CompanyResponse companyResponse = new CompanyResponse();
         companyResponse.setId(company.getId());
         companyResponse.setName(company.getName());

@@ -12,13 +12,14 @@ public class Company {
     private String name;
     private int employeesNumber;
     private List<String> employeeIDs = new ArrayList<>();
-    @MongoId( value = FieldType.OBJECT_ID)
+    @MongoId(value = FieldType.OBJECT_ID)
     private String id;
 
-    public Company(String name,  String id) {
+    public Company(String name, String id) {
         this.name = name;
         this.id = id;
     }
+
     public Company(String name) {
         this.name = name;
     }
