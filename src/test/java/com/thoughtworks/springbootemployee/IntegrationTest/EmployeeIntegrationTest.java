@@ -4,14 +4,11 @@ import com.thoughtworks.springbootemployee.Employee;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class EmployeeIntegrationTest {
@@ -89,8 +85,8 @@ public class EmployeeIntegrationTest {
 
         //then
         mockMvc.perform(put("/employees/" + employee.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(employeeToString))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeToString))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(employee.getId()))
                 .andExpect(jsonPath("$.name").value("bar"))

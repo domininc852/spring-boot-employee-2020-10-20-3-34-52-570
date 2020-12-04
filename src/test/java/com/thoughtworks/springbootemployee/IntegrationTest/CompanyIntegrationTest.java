@@ -7,15 +7,15 @@ import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CompanyIntegrationTest {
@@ -91,9 +90,7 @@ public class CompanyIntegrationTest {
     public void should_return_updated_company_when_update_given_company() throws Exception {
         //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee);
-        Company company = new Company("ABC", 1, employees);
+        Company company = new Company("ABC", 1, Collections.singletonList(employee));
         companyRepository.save(company);
 
         String companyAsJson = "{\n" +
@@ -106,8 +103,8 @@ public class CompanyIntegrationTest {
         //when
         //then
         mockMvc.perform(put("/companies/" + company.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(companyAsJson))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(companyAsJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(company.getId()))
                 .andExpect(jsonPath("$.name").value("ABCD"))
@@ -145,9 +142,7 @@ public class CompanyIntegrationTest {
     public void should_delete_company_when_delete_given_valid_companyID() throws Exception {
         //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee);
-        Company company = new Company("ABC", 1, employees);
+        Company company = new Company("ABC", 1, Collections.singletonList(employee));
         companyRepository.save(company);
         //when
         //then
@@ -159,10 +154,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_delete_given_invalid_companyID() throws Exception {
         //given
-        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee);
-        companyRepository.save(new Company("ABC", 1, employees));
         ObjectId fakeID = new ObjectId();
         //when
         //then
@@ -172,11 +163,8 @@ public class CompanyIntegrationTest {
 
     @Test
     public void should_return_company_when_get_company_by_id_given_valid_companyID() throws Exception {
-        //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee);
-        Company company = new Company("ABC", 1, employees);
+        Company company = new Company("ABC", 1, Collections.singletonList(employee));
         companyRepository.save(company);
         //when
         //then
@@ -195,10 +183,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_get_company_by_id_given_invalid_companyID() throws Exception {
         //given
-        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee);
-        companyRepository.save(new Company("ABC", 1, employees));
         ObjectId fakeID = new ObjectId();
         //when
         //then
@@ -211,10 +195,7 @@ public class CompanyIntegrationTest {
         //given
         Employee employee1 = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         Employee employee2 = employeeRepository.save(new Employee("abcd", 18, "Male", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee1);
-        employees.add(employee2);
-        Company company = new Company("ABC", 1, employees);
+        Company company = new Company("ABC", 1, Arrays.asList(employee1, employee2));
         companyRepository.save(company);
         //when
         //then
@@ -235,12 +216,6 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_404_error_when_get_employees_by_id_given_invalid_companyID() throws Exception {
         //given
-        Employee employee1 = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        Employee employee2 = employeeRepository.save(new Employee("abcd", 18, "Male", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee1);
-        employees.add(employee2);
-        companyRepository.save(new Company("ABC", 1, employees));
         ObjectId fakeID = new ObjectId();
         //when
         //then
@@ -255,21 +230,13 @@ public class CompanyIntegrationTest {
         Employee employee2 = employeeRepository.save(new Employee("b", 18, "Male", 120));
         Employee employee3 = employeeRepository.save(new Employee("c", 18, "Male", 120));
         Employee employee4 = employeeRepository.save(new Employee("d", 18, "Male", 120));
-        List<Employee> employees1 = new ArrayList<>();
-        List<Employee> employees2 = new ArrayList<>();
-        List<Employee> employees3 = new ArrayList<>();
-        List<Employee> employees4 = new ArrayList<>();
-        employees1.add(employee1);
-        employees2.add(employee2);
-        employees3.add(employee3);
-        employees4.add(employee4);
-        Company company1 = new Company("ABC", 1, employees1);
+        Company company1 = new Company("ABC", 1, Collections.singletonList(employee1));
         companyRepository.save(company1);
-        Company company2 = new Company("DEF", 1, employees2);
+        Company company2 = new Company("DEF", 1, Collections.singletonList(employee2));
         companyRepository.save(company2);
-        Company company3 = new Company("GHI", 1, employees3);
+        Company company3 = new Company("GHI", 1, Collections.singletonList(employee3));
         companyRepository.save(company3);
-        Company company4 = new Company("JKL", 1, employees4);
+        Company company4 = new Company("JKL", 1, Collections.singletonList(employee4));
         companyRepository.save(company4);
         //when
         //then
@@ -278,7 +245,7 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].id").value(company3.getId()))
                 .andExpect(jsonPath("$[0].name").value("GHI"))
                 .andExpect(jsonPath("$[0].employeesNumber").value(1))
-                .andExpect(jsonPath("$[0].employees[0].id").value(employees3.get(0).getId()))
+                .andExpect(jsonPath("$[0].employees[0].id").value(employee3.getId()))
                 .andExpect(jsonPath("$[0].employees[0].name").value("c"))
                 .andExpect(jsonPath("$[0].employees[0].age").value(18))
                 .andExpect(jsonPath("$[0].employees[0].gender").value("Male"))
@@ -286,7 +253,7 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[1].id").value(company4.getId()))
                 .andExpect(jsonPath("$[1].name").value("JKL"))
                 .andExpect(jsonPath("$[1].employeesNumber").value(1))
-                .andExpect(jsonPath("$[1].employees[0].id").value(employees4.get(0).getId()))
+                .andExpect(jsonPath("$[1].employees[0].id").value(employee4.getId()))
                 .andExpect(jsonPath("$[1].employees[0].name").value("d"))
                 .andExpect(jsonPath("$[1].employees[0].age").value(18))
                 .andExpect(jsonPath("$[1].employees[0].gender").value("Male"))
