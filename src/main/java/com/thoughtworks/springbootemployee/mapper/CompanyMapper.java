@@ -20,17 +20,18 @@ public class CompanyMapper {
     public Company toEntity(CompanyRequest companyRequest) {
         Company company = new Company();
         BeanUtils.copyProperties(companyRequest, company);
+        if (companyRequest.getEmployeeIDs() == null) {
+            company.setEmployeeIDs(new ArrayList<>());
+        }
         return company;
     }
 
     public CompanyResponse toResponse(Company company) {
         CompanyResponse companyResponse = new CompanyResponse();
-        companyResponse.setId(company.getId());
-        companyResponse.setName(company.getName());
+        BeanUtils.copyProperties(company, companyResponse);
         List<Employee> employees = new ArrayList<>();
         employeeRepository.findAllById(company.getEmployeeIDs()).forEach(employees::add);
         companyResponse.setEmployees(employees);
-        companyResponse.setEmployeesNumber(employees.size());
         return companyResponse;
 
     }
