@@ -13,10 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,10 +41,8 @@ public class CompanyIntegrationTest {
     @Test
     public void should_return_all_companies_when_get_all_given_companies() throws Exception {
         //given
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employeeRepository.save(new Employee("bar", 20, "Female", 120)));
-        Company company = new Company("ABC", 1, employees);
-        companyRepository.save(company);
+        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
+        Company company = companyRepository.save(new Company("ABC", Collections.singletonList(employee.getId())));
         //when
         //then
         mockMvc.perform(get("/companies")).
@@ -54,7 +50,7 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].id").value(company.getId()))
                 .andExpect(jsonPath("$[0].name").value("ABC"))
                 .andExpect(jsonPath("$[0].employeesNumber").value(1))
-                .andExpect(jsonPath("$[0].employees[0].id").value(employees.get(0).getId()))
+                .andExpect(jsonPath("$[0].employees[0].id").value(employee.getId()))
                 .andExpect(jsonPath("$[0].employees[0].name").value("bar"))
                 .andExpect(jsonPath("$[0].employees[0].age").value(20))
                 .andExpect(jsonPath("$[0].employees[0].gender").value("Female"))
@@ -67,9 +63,8 @@ public class CompanyIntegrationTest {
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         String companyAsJson = "{\n" +
                 "    \"name\": \"ABC\",\n" +
-                "    \"employeesNumber\": 1,\n" +
-                "    \"employees\": [\n" +
-                "     " + employee.toJSON() + "\n" +
+                "    \"employeeIDs\": [\n" +
+                "     \"" + employee.getId() + "\" \n" +
                 "    ]\n" +
                 "}";
         //when
@@ -90,16 +85,15 @@ public class CompanyIntegrationTest {
     public void should_return_updated_company_when_update_given_company() throws Exception {
         //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        Company company = new Company("ABC", 1, Collections.singletonList(employee));
+        Company company = companyRepository.save(new Company("ABC", Collections.singletonList(employee.getId())));
         companyRepository.save(company);
-
         String companyAsJson = "{\n" +
                 "    \"name\": \"ABCD\",\n" +
-                "    \"employeesNumber\": 1,\n" +
-                "    \"employees\": [\n" +
-                "     " + employee.toJSON() + "\n" +
+                "    \"employeeIDs\": [\n" +
+                "     \"" + employee.getId() + "\" \n" +
                 "    ]\n" +
                 "}";
+
         //when
         //then
         mockMvc.perform(put("/companies/" + company.getId())
@@ -117,24 +111,23 @@ public class CompanyIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_update_given_invalid_companyID() throws Exception {
+    public void should_return_404_error_when_update_given_nonexist_companyID() throws Exception {
         //given
-        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        List<Employee> employees = new ArrayList<>();
-        employees.add(employee);
-        companyRepository.save(new Company("ABC", 1, employees));
-        String companyAsJson = "{\n" +
-                "    \"name\": \"ABCD\",\n" +
-                "    \"employeesNumber\": 1,\n" +
-                "    \"employees\": [\n" +
-                "     " + employee.toJSON() + "\n" +
-                "    ]\n" +
-                "}";
         ObjectId fakeID = new ObjectId();
         //when
         //then
-        mockMvc.perform(put("/companies/" + fakeID).contentType(MediaType.APPLICATION_JSON).content(companyAsJson))
+        mockMvc.perform(put("/companies/" + fakeID).contentType(MediaType.APPLICATION_JSON).content("{}"))
                 .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void should_return_400_error_when_update_given_invalid_format_companyID() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(put("/companies/" + "1").contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
 
     }
 
@@ -142,7 +135,7 @@ public class CompanyIntegrationTest {
     public void should_delete_company_when_delete_given_valid_companyID() throws Exception {
         //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        Company company = new Company("ABC", 1, Collections.singletonList(employee));
+        Company company = companyRepository.save(new Company("ABC", Collections.singletonList(employee.getId())));
         companyRepository.save(company);
         //when
         //then
@@ -152,7 +145,7 @@ public class CompanyIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_delete_given_invalid_companyID() throws Exception {
+    public void should_return_404_error_when_delete_given_nonexist_companyID() throws Exception {
         //given
         ObjectId fakeID = new ObjectId();
         //when
@@ -162,9 +155,18 @@ public class CompanyIntegrationTest {
     }
 
     @Test
+    public void should_return_400_error_when_delete_given_invalid_format_companyID() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/companies/" + "1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void should_return_company_when_get_company_by_id_given_valid_companyID() throws Exception {
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        Company company = new Company("ABC", 1, Collections.singletonList(employee));
+        Company company = companyRepository.save(new Company("ABC", Collections.singletonList(employee.getId())));
         companyRepository.save(company);
         //when
         //then
@@ -181,7 +183,7 @@ public class CompanyIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_get_company_by_id_given_invalid_companyID() throws Exception {
+    public void should_return_404_error_when_get_company_by_id_given_nonexist_companyID() throws Exception {
         //given
         ObjectId fakeID = new ObjectId();
         //when
@@ -191,11 +193,20 @@ public class CompanyIntegrationTest {
     }
 
     @Test
+    public void should_return_404_error_when_get_company_by_id_given_invalid_format_companyID() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(get("/companies/" + "1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void should_return_all_employees_when_get_employees_by_id_given_valid_companyID() throws Exception {
         //given
         Employee employee1 = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         Employee employee2 = employeeRepository.save(new Employee("abcd", 18, "Male", 120));
-        Company company = new Company("ABC", 1, Arrays.asList(employee1, employee2));
+        Company company = companyRepository.save(new Company("ABC", Arrays.asList(employee1.getId(), employee2.getId())));
         companyRepository.save(company);
         //when
         //then
@@ -214,7 +225,7 @@ public class CompanyIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_get_employees_by_id_given_invalid_companyID() throws Exception {
+    public void should_return_404_error_when_get_employees_by_id_given_nonexist_companyID() throws Exception {
         //given
         ObjectId fakeID = new ObjectId();
         //when
@@ -224,19 +235,26 @@ public class CompanyIntegrationTest {
     }
 
     @Test
+    public void should_return_400_error_when_get_employees_by_id_given_invalid_format_companyID() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(get("/companies/1/employees"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void should_paged_companies_when_get_companies_by_page_and_page_size_given_page_and_page_size() throws Exception {
         //given
         Employee employee1 = employeeRepository.save(new Employee("a", 18, "Female", 120));
         Employee employee2 = employeeRepository.save(new Employee("b", 18, "Male", 120));
         Employee employee3 = employeeRepository.save(new Employee("c", 18, "Male", 120));
         Employee employee4 = employeeRepository.save(new Employee("d", 18, "Male", 120));
-        Company company1 = new Company("ABC", 1, Collections.singletonList(employee1));
-        companyRepository.save(company1);
-        Company company2 = new Company("DEF", 1, Collections.singletonList(employee2));
-        companyRepository.save(company2);
-        Company company3 = new Company("GHI", 1, Collections.singletonList(employee3));
+        companyRepository.save(new Company("ABC", Collections.singletonList(employee1.getId())));
+        companyRepository.save(new Company("DEF", Collections.singletonList(employee2.getId())));
+        Company company3 = new Company("GHI", Collections.singletonList(employee3.getId()));
         companyRepository.save(company3);
-        Company company4 = new Company("JKL", 1, Collections.singletonList(employee4));
+        Company company4 = new Company("JKL", Collections.singletonList(employee4.getId()));
         companyRepository.save(company4);
         //when
         //then

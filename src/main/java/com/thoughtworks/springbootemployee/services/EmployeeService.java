@@ -22,6 +22,9 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
+    public EmployeeService() {
+    }
+
     public List<Employee> getAll() {
         return employeeRepository.findAll();
     }
@@ -30,7 +33,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee update(String employeeID, Employee employeeUpdate) throws EmployeeNotFoundException{
+    public Employee update(String employeeID, Employee employeeUpdate) throws EmployeeNotFoundException {
         Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
         if (employeeToUpdate.isPresent()) {
             employeeUpdate.setId(employeeToUpdate.get().getId());
@@ -43,15 +46,14 @@ public class EmployeeService {
         Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
         if (employeeToUpdate.isPresent()) {
             employeeRepository.deleteById(employeeID);
-        }
-        else{
+        } else {
             throw new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND);
         }
     }
 
     public Employee getEmployeeByID(String employeeID) throws EmployeeNotFoundException {
         return employeeRepository.findById(employeeID)
-                .orElseThrow(()-> new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND));
+                .orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND));
     }
 
     public List<Employee> getEmployeesByGender(String gender) {
@@ -59,7 +61,7 @@ public class EmployeeService {
     }
 
     public Page<Employee> getEmployeesByPageAndPageSize(int page, int pageSize) {
-        Pageable paging = PageRequest.of(page,pageSize);
+        Pageable paging = PageRequest.of(page, pageSize);
         return employeeRepository.findAll(paging);
     }
 }

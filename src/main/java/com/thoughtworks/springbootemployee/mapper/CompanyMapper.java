@@ -23,6 +23,7 @@ public class CompanyMapper {
         if (companyRequest.getEmployeeIDs() == null) {
             company.setEmployeeIDs(new ArrayList<>());
         }
+        company.setEmployeesNumber(company.getEmployeeIDs().size());
         return company;
     }
 

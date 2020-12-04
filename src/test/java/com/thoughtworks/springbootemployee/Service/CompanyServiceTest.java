@@ -2,7 +2,9 @@ package com.thoughtworks.springbootemployee.Service;
 
 import com.thoughtworks.springbootemployee.entities.Company;
 import com.thoughtworks.springbootemployee.entities.Employee;
+import com.thoughtworks.springbootemployee.exceptions.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.repositories.CompanyRepository;
+import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import com.thoughtworks.springbootemployee.services.CompanyService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,9 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,10 +28,9 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
         List<Company> companies = new ArrayList<>();
-        companies.add(new Company("ABC", 1, employees, "1"));
+        companies.add(new Company("ABC", Collections.singletonList(employee.getId())));
         Mockito.when(companyRepository.findAll()).thenReturn(companies);
 
         //when
@@ -46,9 +45,8 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
-        Company company = new Company("ABC", 1, employees, "1");
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         Mockito.when(companyRepository.save(company)).thenReturn(company);
 
         //when
@@ -60,13 +58,12 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_updated_company_when_update_company_given_a_company_and_valid_companyID() {
+    public void should_return_updated_company_when_update_company_given_a_company_and_valid_companyID() throws CompanyNotFoundException {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
-        Company company = new Company("ABC", 1, employees, "1");
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.of(company));
         Mockito.when(companyRepository.save(any())).thenReturn((company));
 
@@ -83,24 +80,22 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
-        Company company = new Company("ABC", 1, employees, "1");
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.empty());
 
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> companyService.update("1", company));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.update("1", company));
     }
 
     @Test
-    public void should_delete_company_when_delete_company_given_valid_companyID() {
+    public void should_delete_company_when_delete_company_given_valid_companyID() throws CompanyNotFoundException {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
-        Company company = new Company("ABC", 1, employees, "1");
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.of(company));
 
         //when
@@ -118,17 +113,16 @@ public class CompanyServiceTest {
 
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> companyService.delete("1"));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.delete("1"));
     }
 
     @Test
-    public void should_return_company_when_get_company_with_id_given_valid_companyID() {
+    public void should_return_company_when_get_company_with_id_given_valid_companyID() throws CompanyNotFoundException {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
-        Company company = new Company("ABC", 1, employees, "1");
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.of(company));
         //when
         Company actual = companyService.getCompanyByID("1");
@@ -144,22 +138,23 @@ public class CompanyServiceTest {
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.empty());
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> companyService.getCompanyByID("1"));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.getCompanyByID("1"));
     }
 
     @Test
-    public void should_return_employees_when_get_employees_by_company_id_given_valid_companyID() {
+    public void should_return_employees_when_get_employees_by_company_id_given_valid_companyID() throws CompanyNotFoundException {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
-        CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "test", 18, "Male", 10000));
-        Company company = new Company("ABC", 1, employees, "1");
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository, employeeRepository);
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(employeeRepository.findAllById(any())).thenReturn(Collections.singletonList(employee));
         //when
         List<Employee> actual = companyService.getEmployeesByCompanyID("1");
         //then
-        assertEquals(employees, actual);
+        assertEquals(1, actual.size());
     }
 
     @Test
@@ -170,7 +165,7 @@ public class CompanyServiceTest {
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.empty());
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> companyService.getEmployeesByCompanyID("1"));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.getEmployeesByCompanyID("1"));
     }
 
     @Test
@@ -178,9 +173,8 @@ public class CompanyServiceTest {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("3", "test3", 18, "Male", 10000));
-        Company company = new Company("HIJ", 1, employees, "3");
+        Employee employee = new Employee("1", "test", 18, "Male", 10000);
+        Company company = new Company("ABC", Collections.singletonList(employee.getId()));
         List<Company> companies = new ArrayList<>();
         companies.add(company);
         Page<Company> page = new PageImpl<>(companies);

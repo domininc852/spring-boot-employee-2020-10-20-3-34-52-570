@@ -24,8 +24,16 @@ public class CompanyService {
     private static final String COMPANY_ID_NOT_FOUND = "companyID not found";
 
 
+    public CompanyService(CompanyRepository companyRepository, EmployeeRepository employeeRepository) {
+        this.companyRepository = companyRepository;
+        this.employeeRepository = employeeRepository;
+    }
+
     public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
+    }
+
+    public CompanyService() {
     }
 
     public List<Company> getAll() {

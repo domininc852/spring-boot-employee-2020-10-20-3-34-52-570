@@ -20,9 +20,12 @@ public class Company {
         this.id = id;
     }
 
-    public Company(String name) {
+    public Company(String name, List<String> employeeIDs) {
         this.name = name;
+        this.employeeIDs = employeeIDs;
+        employeesNumber = employeeIDs.size();
     }
+
 
     public Company() {
 

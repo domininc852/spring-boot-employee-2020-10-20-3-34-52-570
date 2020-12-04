@@ -53,7 +53,7 @@ public class EmployeeIntegrationTest {
         String employeeAsJson = "{\n" +
                 "        \"name\": \"foobar\",\n" +
                 "        \"age\": 3,\n" +
-                "        \"gender\": null,\n" +
+                "        \"gender\": \"Male\",\n" +
                 "        \"salary\": 4\n" +
                 "    }";
         //when
@@ -67,6 +67,7 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.name").value("foobar"))
                 .andExpect(jsonPath("$.age").value(3))
+                .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(4));
 
     }
@@ -96,21 +97,23 @@ public class EmployeeIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_update_employee_given_an_invalid_employeeID() throws Exception {
+    public void should_return_404_error_when_update_employee_given_an_nonexist_employeeID() throws Exception {
         //given
-        Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
-        String employeeToString = " {\n" +
-                "            \"name\": \"bar\",\n" +
-                "            \"age\": 20,\n" +
-                "            \"gender\": \"Female\",\n" +
-                "            \"salary\": 120\n" +
-                "    }";
         ObjectId fakeID = new ObjectId();
+        //when
+        //then
+        mockMvc.perform(put("/employees/" + fakeID).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_return_400_error_when_update_employee_given_an_invalid_format_employeeID() throws Exception {
+        //given
         //when
 
         //then
-        mockMvc.perform(put("/employees/" + fakeID).contentType(MediaType.APPLICATION_JSON).content(employeeToString))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(put("/employees/" + "1").contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -127,7 +130,7 @@ public class EmployeeIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error__when_delete_employee_given_an_invalid_employeeID() throws Exception {
+    public void should_return_404_error__when_delete_employee_given_an_nonexist_employeeID() throws Exception {
         //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         ObjectId fakeID = new ObjectId();
@@ -136,6 +139,15 @@ public class EmployeeIntegrationTest {
         //then
         mockMvc.perform(delete("/employees/" + fakeID))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_return_400_error__when_delete_employee_given_an_invalid_format_employeeID() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/employees/" + "1"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -155,7 +167,7 @@ public class EmployeeIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_get_employee_by_id_given_an_invalid_employeeID() throws Exception {
+    public void should_return_404_error_when_get_employee_by_id_given_an_nonexist_employeeID() throws Exception {
         //given
         Employee employee = employeeRepository.save(new Employee("bar", 20, "Female", 120));
         ObjectId fakeID = new ObjectId();
@@ -164,6 +176,16 @@ public class EmployeeIntegrationTest {
         //then
         mockMvc.perform(get("/employees/" + fakeID))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_return_400_error_when_get_employee_by_id_given_an_invalid_format_employeeID() throws Exception {
+        //given
+        //when
+
+        //then
+        mockMvc.perform(get("/employees/" + "1"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

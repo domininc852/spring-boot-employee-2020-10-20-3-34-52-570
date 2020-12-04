@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.Service;
 
 import com.thoughtworks.springbootemployee.entities.Employee;
+import com.thoughtworks.springbootemployee.exceptions.EmployeeNotFoundException;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
 import com.thoughtworks.springbootemployee.services.EmployeeService;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_updated_employee_when_update_employee_given_an_employee_and_valid_employeeID() {
+    public void should_return_updated_employee_when_update_employee_given_an_employee_and_valid_employeeID() throws EmployeeNotFoundException {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -80,11 +80,11 @@ public class EmployeeServiceTest {
         Mockito.when(employeeRepository.findById(any())).thenReturn(Optional.empty());
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> employeeService.update("1", employee));
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.update("1", employee));
     }
 
     @Test
-    public void should_delete_employee_when_delete_employee_given_an_valid_employeeID() {
+    public void should_delete_employee_when_delete_employee_given_an_valid_employeeID() throws EmployeeNotFoundException {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -104,11 +104,11 @@ public class EmployeeServiceTest {
         Mockito.when(employeeRepository.findById(any())).thenReturn(Optional.empty());
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> employeeService.delete("1"));
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.delete("1"));
     }
 
     @Test
-    public void should_return_employee_when_get_employee_by_id_given_valid_employeeID() {
+    public void should_return_employee_when_get_employee_by_id_given_valid_employeeID() throws EmployeeNotFoundException {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -128,7 +128,7 @@ public class EmployeeServiceTest {
         when(employeeRepository.findById(any())).thenReturn(Optional.empty());
         //when
         //then
-        assertThrows(ResponseStatusException.class, () -> employeeService.getEmployeeByID("1"));
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.getEmployeeByID("1"));
     }
 
     @Test
