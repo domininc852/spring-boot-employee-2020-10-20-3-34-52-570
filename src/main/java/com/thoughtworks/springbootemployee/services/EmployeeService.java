@@ -33,18 +33,18 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee update(String employeeID, Employee employeeUpdate) throws EmployeeNotFoundException {
+    public Employee update(String employeeID, Employee employeeUpdate) {
         Employee employee = getEmployeeByID(employeeID);
         employeeUpdate.setId(employee.getId());
         return employeeRepository.save(employeeUpdate);
     }
 
-    public void delete(String employeeID) throws EmployeeNotFoundException {
+    public void delete(String employeeID) {
         getEmployeeByID(employeeID);
         employeeRepository.deleteById(employeeID);
     }
 
-    public Employee getEmployeeByID(String employeeID) throws EmployeeNotFoundException {
+    public Employee getEmployeeByID(String employeeID) {
         return employeeRepository.findById(employeeID)
                 .orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND));
     }

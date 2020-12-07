@@ -56,7 +56,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_updated_employee_when_update_employee_given_an_employee_and_valid_employeeID() throws EmployeeNotFoundException {
+    public void should_return_updated_employee_when_update_employee_given_an_employee_and_valid_employeeID()  {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -84,7 +84,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_delete_employee_when_delete_employee_given_an_valid_employeeID() throws EmployeeNotFoundException {
+    public void should_delete_employee_when_delete_employee_given_an_valid_employeeID()  {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -108,7 +108,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void should_return_employee_when_get_employee_by_id_given_valid_employeeID() throws EmployeeNotFoundException {
+    public void should_return_employee_when_get_employee_by_id_given_valid_employeeID()  {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);

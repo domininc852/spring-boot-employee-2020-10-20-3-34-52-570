@@ -1,16 +1,14 @@
 package com.thoughtworks.springbootemployee.dto;
 
-import com.thoughtworks.springbootemployee.entities.Employee;
-
 import java.util.List;
 
 public class CompanyResponse {
     private String id;
     private String name;
     private int employeesNumber;
-    private List<Employee> employees;
+    private List<EmployeeResponse> employees;
 
-    public CompanyResponse(String id, String name, int employeesNumber, List<Employee> employees) {
+    public CompanyResponse(String id, String name, int employeesNumber, List<EmployeeResponse> employees) {
         this.id = id;
         this.name = name;
         this.employeesNumber = employeesNumber;
@@ -44,11 +42,11 @@ public class CompanyResponse {
         this.employeesNumber = employeesNumber;
     }
 
-    public List<Employee> getEmployees() {
+    public List<EmployeeResponse> getEmployees() {
         return employees;
     }
 
-    public void setEmployees(List<Employee> employees) {
+    public void setEmployees(List<EmployeeResponse> employees) {
         this.employees = employees;
     }
 }

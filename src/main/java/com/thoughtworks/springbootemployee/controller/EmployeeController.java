@@ -28,7 +28,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeID}")
-    public EmployeeResponse getEmployeeByID(@PathVariable String employeeID) throws EmployeeNotFoundException {
+    public EmployeeResponse getEmployeeByID(@PathVariable String employeeID) {
         return employeeMapper.toResponse(employeeService.getEmployeeByID(employeeID));
     }
 
@@ -51,13 +51,13 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeID}")
-    public EmployeeResponse updateEmployee(@PathVariable String employeeID, @RequestBody EmployeeRequest employeeRequest) throws EmployeeNotFoundException {
+    public EmployeeResponse updateEmployee(@PathVariable String employeeID, @RequestBody EmployeeRequest employeeRequest) {
         Employee employee = employeeMapper.toEntity(employeeRequest);
         return employeeMapper.toResponse(employeeService.update(employeeID, employee));
     }
 
     @DeleteMapping("/{employeeID}")
-    public void deleteEmployee(@PathVariable String employeeID) throws EmployeeNotFoundException {
+    public void deleteEmployee(@PathVariable String employeeID) {
         employeeService.delete(employeeID);
     }
 

@@ -44,24 +44,24 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public Company update(String companyID, Company companyUpdate) throws CompanyNotFoundException {
-        Company company= getCompanyByID(companyID);
+    public Company update(String companyID, Company companyUpdate) {
+        Company company = getCompanyByID(companyID);
         companyUpdate.setId(company.getId());
         companyUpdate.setEmployeesNumber(companyUpdate.getEmployeeIDs().size());
         return companyRepository.save(companyUpdate);
     }
 
-    public void delete(String companyID) throws CompanyNotFoundException {
+    public void delete(String companyID) {
         getCompanyByID(companyID);
         companyRepository.deleteById(companyID);
     }
 
-    public Company getCompanyByID(String companyID) throws CompanyNotFoundException {
+    public Company getCompanyByID(String companyID) {
         return companyRepository.findById(companyID)
                 .orElseThrow(() -> new CompanyNotFoundException(COMPANY_ID_NOT_FOUND));
     }
 
-    public List<Employee> getEmployeesByCompanyID(String companyID) throws CompanyNotFoundException {
+    public List<Employee> getEmployeesByCompanyID(String companyID) {
         Company company = getCompanyByID(companyID);
         List<Employee> employees = new ArrayList<>();
         employeeRepository.findAllById(company.getEmployeeIDs()).forEach(employees::add);

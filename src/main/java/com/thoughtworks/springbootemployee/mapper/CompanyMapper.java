@@ -2,6 +2,7 @@ package com.thoughtworks.springbootemployee.mapper;
 
 import com.thoughtworks.springbootemployee.dto.CompanyRequest;
 import com.thoughtworks.springbootemployee.dto.CompanyResponse;
+import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.entities.Company;
 import com.thoughtworks.springbootemployee.entities.Employee;
 import com.thoughtworks.springbootemployee.repositories.EmployeeRepository;
@@ -14,8 +15,6 @@ import java.util.List;
 
 @Component
 public class CompanyMapper {
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
     public Company toEntity(CompanyRequest companyRequest) {
         Company company = new Company();
@@ -27,12 +26,10 @@ public class CompanyMapper {
         return company;
     }
 
-    public CompanyResponse toResponse(Company company) {
+    public CompanyResponse toResponse(Company company, List<EmployeeResponse> employeeResponses) {
         CompanyResponse companyResponse = new CompanyResponse();
         BeanUtils.copyProperties(company, companyResponse);
-        List<Employee> employees = new ArrayList<>();
-        employeeRepository.findAllById(company.getEmployeeIDs()).forEach(employees::add);
-        companyResponse.setEmployees(employees);
+        companyResponse.setEmployees(employeeResponses);
         return companyResponse;
 
     }

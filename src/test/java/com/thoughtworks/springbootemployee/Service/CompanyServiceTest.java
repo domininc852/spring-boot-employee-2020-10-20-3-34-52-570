@@ -58,7 +58,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_updated_company_when_update_company_given_a_company_and_valid_companyID() throws CompanyNotFoundException {
+    public void should_return_updated_company_when_update_company_given_a_company_and_valid_companyID() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -90,7 +90,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_delete_company_when_delete_company_given_valid_companyID() throws CompanyNotFoundException {
+    public void should_delete_company_when_delete_company_given_valid_companyID() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -117,7 +117,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_company_when_get_company_with_id_given_valid_companyID() throws CompanyNotFoundException {
+    public void should_return_company_when_get_company_with_id_given_valid_companyID() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -142,7 +142,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void should_return_employees_when_get_employees_by_company_id_given_valid_companyID() throws CompanyNotFoundException {
+    public void should_return_employees_when_get_employees_by_company_id_given_valid_companyID() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);

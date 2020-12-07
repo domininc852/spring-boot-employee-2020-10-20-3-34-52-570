@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.controller;
 import com.thoughtworks.springbootemployee.dto.CompanyRequest;
 import com.thoughtworks.springbootemployee.dto.CompanyResponse;
 import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
+import com.thoughtworks.springbootemployee.entities.Company;
 import com.thoughtworks.springbootemployee.exceptions.CompanyNotFoundException;
 import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
 import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
@@ -24,25 +25,37 @@ public class CompanyController {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    private List<EmployeeResponse> getEmployees(String companyID) {
+        return companyService.getEmployeesByCompanyID(companyID)
+                .stream().map(employeeMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping
     public List<CompanyResponse> getAllCompanies() {
-        return companyService.getAll().stream().map(companyMapper::toResponse).collect(Collectors.toList());
+        return companyService.getAll().stream().map(company -> {
+            List<EmployeeResponse> employeeResponses = getEmployees(company.getId());
+            return companyMapper.toResponse(company, employeeResponses);
+        }).collect(Collectors.toList());
     }
 
     @GetMapping("/{companyID}")
-    public CompanyResponse getCompanyWithID(@PathVariable String companyID) throws CompanyNotFoundException {
-        return companyMapper.toResponse(companyService.getCompanyByID(companyID));
+    public CompanyResponse getCompanyWithID(@PathVariable String companyID) {
+        return companyMapper.toResponse(companyService.getCompanyByID(companyID), getEmployees(companyID));
 
     }
 
     @GetMapping(params = {"page", "pageSize"})
     public List<CompanyResponse> getCompaniesByPageNumberAndPageSize(@RequestParam(name = "page", required = false) int page, @RequestParam(name = "pageSize", required = false) int pageSize) {
         return companyService.getCompaniesByPageAndPageSize(page, pageSize)
-                .getContent().stream().map(companyMapper::toResponse).collect(Collectors.toList());
+                .getContent().stream().map(company -> {
+                    List<EmployeeResponse> employeeResponses = getEmployees(company.getId());
+                    return companyMapper.toResponse(company, employeeResponses);
+                }).collect(Collectors.toList());
     }
 
     @GetMapping("/{companyID}/employees")
-    public List<EmployeeResponse> getEmployeesByCompanyID(@PathVariable String companyID) throws CompanyNotFoundException {
+    public List<EmployeeResponse> getEmployeesByCompanyID(@PathVariable String companyID) {
         return companyService.getEmployeesByCompanyID(companyID)
                 .stream().map(employeeMapper::toResponse).collect(Collectors.toList());
 
@@ -52,16 +65,17 @@ public class CompanyController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public CompanyResponse createCompany(@RequestBody CompanyRequest companyRequest) {
-        return companyMapper.toResponse(companyService.save(companyMapper.toEntity(companyRequest)));
+        Company company = companyService.save(companyMapper.toEntity(companyRequest));
+        return companyMapper.toResponse(company, getEmployees(company.getId()));
     }
 
     @PutMapping("/{companyID}")
-    public CompanyResponse updateCompany(@PathVariable String companyID, @RequestBody CompanyRequest companyRequest) throws CompanyNotFoundException {
-        return companyMapper.toResponse(companyService.update(companyID, companyMapper.toEntity(companyRequest)));
+    public CompanyResponse updateCompany(@PathVariable String companyID, @RequestBody CompanyRequest companyRequest) {
+        return companyMapper.toResponse(companyService.update(companyID, companyMapper.toEntity(companyRequest)), getEmployees(companyID));
     }
 
     @DeleteMapping("/{companyID}")
-    public void deleteCompany(@PathVariable String companyID) throws CompanyNotFoundException {
+    public void deleteCompany(@PathVariable String companyID) {
         companyService.delete(companyID);
     }
 }
