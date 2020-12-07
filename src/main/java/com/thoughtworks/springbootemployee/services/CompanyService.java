@@ -45,24 +45,15 @@ public class CompanyService {
     }
 
     public Company update(String companyID, Company companyUpdate) throws CompanyNotFoundException {
-        Optional<Company> companyToUpdate = companyRepository.findById(companyID);
-        if (companyToUpdate.isPresent()) {
-            companyUpdate.setId(companyToUpdate.get().getId());
-            companyUpdate.setEmployeesNumber(companyUpdate.getEmployeeIDs().size());
-            return companyRepository.save(companyUpdate);
-        }
-        throw new CompanyNotFoundException(COMPANY_ID_NOT_FOUND);
+        Company company= getCompanyByID(companyID);
+        companyUpdate.setId(company.getId());
+        companyUpdate.setEmployeesNumber(companyUpdate.getEmployeeIDs().size());
+        return companyRepository.save(companyUpdate);
     }
 
     public void delete(String companyID) throws CompanyNotFoundException {
-        Optional<Company> companyToDelete = companyRepository.findById(companyID);
-        if (companyToDelete.isPresent()) {
-            companyRepository.deleteById(companyID);
-        } else {
-            throw new CompanyNotFoundException(COMPANY_ID_NOT_FOUND);
-        }
-
-
+        getCompanyByID(companyID);
+        companyRepository.deleteById(companyID);
     }
 
     public Company getCompanyByID(String companyID) throws CompanyNotFoundException {
@@ -71,13 +62,10 @@ public class CompanyService {
     }
 
     public List<Employee> getEmployeesByCompanyID(String companyID) throws CompanyNotFoundException {
-        Optional<Company> company = companyRepository.findById(companyID);
-        if (company.isPresent()) {
-            List<Employee> employees = new ArrayList<>();
-            employeeRepository.findAllById(company.get().getEmployeeIDs()).forEach(employees::add);
-            return employees;
-        }
-        throw new CompanyNotFoundException(COMPANY_ID_NOT_FOUND);
+        Company company = getCompanyByID(companyID);
+        List<Employee> employees = new ArrayList<>();
+        employeeRepository.findAllById(company.getEmployeeIDs()).forEach(employees::add);
+        return employees;
     }
 
     public Page<Company> getCompaniesByPageAndPageSize(int page, int pageSize) {

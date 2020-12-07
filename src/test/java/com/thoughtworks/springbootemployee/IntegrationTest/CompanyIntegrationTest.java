@@ -193,7 +193,7 @@ public class CompanyIntegrationTest {
     }
 
     @Test
-    public void should_return_404_error_when_get_company_by_id_given_invalid_format_companyID() throws Exception {
+    public void should_return_400_error_when_get_company_by_id_given_invalid_format_companyID() throws Exception {
         //given
         //when
         //then

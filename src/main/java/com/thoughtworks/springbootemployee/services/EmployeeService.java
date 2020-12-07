@@ -34,21 +34,14 @@ public class EmployeeService {
     }
 
     public Employee update(String employeeID, Employee employeeUpdate) throws EmployeeNotFoundException {
-        Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
-        if (employeeToUpdate.isPresent()) {
-            employeeUpdate.setId(employeeToUpdate.get().getId());
-            return employeeRepository.save(employeeUpdate);
-        }
-        throw new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND);
+        Employee employee = getEmployeeByID(employeeID);
+        employeeUpdate.setId(employee.getId());
+        return employeeRepository.save(employeeUpdate);
     }
 
     public void delete(String employeeID) throws EmployeeNotFoundException {
-        Optional<Employee> employeeToUpdate = employeeRepository.findById(employeeID);
-        if (employeeToUpdate.isPresent()) {
-            employeeRepository.deleteById(employeeID);
-        } else {
-            throw new EmployeeNotFoundException(EMPLOYEE_ID_NOT_FOUND);
-        }
+        getEmployeeByID(employeeID);
+        employeeRepository.deleteById(employeeID);
     }
 
     public Employee getEmployeeByID(String employeeID) throws EmployeeNotFoundException {
